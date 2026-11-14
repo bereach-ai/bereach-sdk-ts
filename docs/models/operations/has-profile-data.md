@@ -1,15 +1,17 @@
 # HasProfileData
 
-## Example Usage
+
+## Supported Types
+
+### `operations.HasProfileDataEnum`
 
 ```typescript
-import { HasProfileData } from "bereach/models/operations";
-
-let value: HasProfileData = "false";
+const value: operations.HasProfileDataEnum = "false";
 ```
 
-## Values
+### `boolean`
 
 ```typescript
-"true" | "false"
+const value: boolean = true;
 ```
+

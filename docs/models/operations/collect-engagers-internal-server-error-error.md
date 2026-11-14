@@ -1,0 +1,23 @@
+# CollectEngagersInternalServerErrorError
+
+## Example Usage
+
+```typescript
+import { CollectEngagersInternalServerErrorError } from "bereach/models/operations";
+
+let value: CollectEngagersInternalServerErrorError = {
+  code: "<value>",
+  message: "<value>",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                  | Type                                                                                                                                   | Required                                                                                                                               | Description                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `code`                                                                                                                                 | *string*                                                                                                                               | :heavy_check_mark:                                                                                                                     | N/A                                                                                                                                    |
+| `message`                                                                                                                              | *string*                                                                                                                               | :heavy_check_mark:                                                                                                                     | N/A                                                                                                                                    |
+| `docs`                                                                                                                                 | *string*                                                                                                                               | :heavy_minus_sign:                                                                                                                     | N/A                                                                                                                                    |
+| `details`                                                                                                                              | *operations.CollectEngagersInternalServerErrorDetails*                                                                                 | :heavy_minus_sign:                                                                                                                     | N/A                                                                                                                                    |
+| `upgradeUrl`                                                                                                                           | *string*                                                                                                                               | :heavy_minus_sign:                                                                                                                     | N/A                                                                                                                                    |
+| `quotaKind`                                                                                                                            | [operations.CollectEngagersInternalServerErrorQuotaKind](../../models/operations/collect-engagers-internal-server-error-quota-kind.md) | :heavy_minus_sign:                                                                                                                     | N/A                                                                                                                                    |

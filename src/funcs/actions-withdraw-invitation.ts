@@ -5,6 +5,7 @@
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -30,7 +31,7 @@ import { Result } from "../types/fp.js";
  * Withdraw a sent connection invitation
  *
  * @remarks
- * Withdraw a pending sent connection invitation. Pre-fetches invitee details from last 500 sent invitations, then uses SDUI endpoint to withdraw. Only works for CONNECTION type invitations. Returns bad_request if invitation not found, already withdrawn, or accepted. Returns bad_request with message if invitation expired (410). 1 credit.
+ * Withdraws a pending LinkedIn connection invitation this account sent. Take the invitation from the sent invitations list. LinkedIn then blocks inviting the same person again for three weeks.
  */
 export function actionsWithdrawInvitation(
   client: BereachCore,
@@ -47,7 +48,7 @@ export function actionsWithdrawInvitation(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -83,7 +84,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -153,21 +154,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -190,7 +178,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -211,7 +199,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),

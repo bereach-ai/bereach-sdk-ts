@@ -5,6 +5,7 @@
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -27,18 +28,18 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Batch-schedule drafts for auto-send
+ * Put drafts in line to be sent
  *
  * @remarks
- * Schedule existing draft messages for auto-send at a specific time. 0 credits.
+ * Put written drafts in line to be sent. The line decides when: each message goes out once the person is connected on this account. A message that could not be sent re-enters the line the same way. No time can be chosen. Cost: nothing; messages come with a trial, a plan or any money added.
  */
 export function scheduledMessagesBatchSchedule(
   client: BereachCore,
-  request: operations.BatchScheduleRequest,
+  request: operations.DraftScheduleRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.BatchScheduleResponse,
+    operations.DraftScheduleResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -47,7 +48,7 @@ export function scheduledMessagesBatchSchedule(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -69,12 +70,12 @@ export function scheduledMessagesBatchSchedule(
 
 async function $do(
   client: BereachCore,
-  request: operations.BatchScheduleRequest,
+  request: operations.DraftScheduleRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.BatchScheduleResponse,
+      operations.DraftScheduleResponse,
       | errors.BadRequestError
       | errors.UnauthorizedError
       | errors.ForbiddenError
@@ -83,7 +84,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -100,7 +101,7 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => z.parse(operations.BatchScheduleRequest$outboundSchema, value),
+    (value) => z.parse(operations.DraftScheduleRequest$outboundSchema, value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -123,7 +124,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "batchSchedule",
+    operationID: "draftSchedule",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -152,21 +153,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -180,7 +168,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.BatchScheduleResponse,
+    operations.DraftScheduleResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -189,7 +177,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -201,7 +189,7 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, operations.BatchScheduleResponse$inboundSchema),
+    M.json(200, operations.DraftScheduleResponse$inboundSchema),
     M.jsonErr(400, errors.BadRequestError$inboundSchema),
     M.jsonErr(401, errors.UnauthorizedError$inboundSchema),
     M.jsonErr(403, errors.ForbiddenError$inboundSchema),
@@ -210,7 +198,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),

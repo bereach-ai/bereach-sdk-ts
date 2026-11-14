@@ -5,6 +5,7 @@
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
 import { encodeFormQuery } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -30,15 +31,15 @@ import { Result } from "../types/fp.js";
  * List LinkedIn connections
  *
  * @remarks
- * List your LinkedIn connections (1st degree) with name, headline, profile URL, and connection date. 1 credit per page.
+ * List the people you are ALREADY connected to, first degree, newest first, with name, headline, profile URL and the date you connected, AND save each page into the contact list. This is your existing network, so use it to work people who already know you; for people you are not connected to yet ask for recommended people instead, and for where your outgoing invitations stand ask for connection status. Pages with `nextStart`. `saved` reports what that write actually stored.
  */
 export function profileListConnections(
   client: BereachCore,
-  request?: operations.ListConnectionsRequest | undefined,
+  request?: operations.GetConnectionsRequest | undefined,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.ListConnectionsResponse,
+    operations.GetConnectionsResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -47,7 +48,7 @@ export function profileListConnections(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -69,12 +70,12 @@ export function profileListConnections(
 
 async function $do(
   client: BereachCore,
-  request?: operations.ListConnectionsRequest | undefined,
+  request?: operations.GetConnectionsRequest | undefined,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.ListConnectionsResponse,
+      operations.GetConnectionsResponse,
       | errors.BadRequestError
       | errors.UnauthorizedError
       | errors.ForbiddenError
@@ -83,7 +84,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -102,7 +103,7 @@ async function $do(
     request,
     (value) =>
       z.parse(
-        z.optional(operations.ListConnectionsRequest$outboundSchema),
+        z.optional(operations.GetConnectionsRequest$outboundSchema),
         value,
       ),
     "Input validation failed",
@@ -117,7 +118,6 @@ async function $do(
 
   const query = encodeFormQuery({
     "count": payload?.count,
-    "keywords": payload?.keywords,
     "sortType": payload?.sortType,
     "start": payload?.start,
   });
@@ -133,7 +133,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "listConnections",
+    operationID: "getConnections",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -163,21 +163,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -191,7 +178,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.ListConnectionsResponse,
+    operations.GetConnectionsResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -200,7 +187,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -212,7 +199,7 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, operations.ListConnectionsResponse$inboundSchema),
+    M.json(200, operations.GetConnectionsResponse$inboundSchema),
     M.jsonErr(400, errors.BadRequestError$inboundSchema),
     M.jsonErr(401, errors.UnauthorizedError$inboundSchema),
     M.jsonErr(403, errors.ForbiddenError$inboundSchema),
@@ -221,7 +208,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),

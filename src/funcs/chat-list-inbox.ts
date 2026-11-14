@@ -5,6 +5,7 @@
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -30,15 +31,15 @@ import { Result } from "../types/fp.js";
  * List LinkedIn inbox conversations
  *
  * @remarks
- * List inbox conversations for the authenticated user. Returns conversations with participants, last message, and read status. Use `count` to control the number of conversations returned (1-40, default 20). Paginate via nextCursor. 0 credits.
+ * List inbox conversations for the authenticated user. Returns conversations with participants, last message, and read status. Use `count` to control the number of conversations returned (1-25, default 20). Paginate via nextCursor.
  */
 export function chatListInbox(
   client: BereachCore,
-  request?: operations.ListInboxRequest | undefined,
+  request?: operations.InboxListRequest | undefined,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.ListInboxResponse,
+    operations.InboxListResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -47,7 +48,7 @@ export function chatListInbox(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -69,12 +70,12 @@ export function chatListInbox(
 
 async function $do(
   client: BereachCore,
-  request?: operations.ListInboxRequest | undefined,
+  request?: operations.InboxListRequest | undefined,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.ListInboxResponse,
+      operations.InboxListResponse,
       | errors.BadRequestError
       | errors.UnauthorizedError
       | errors.ForbiddenError
@@ -83,7 +84,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -101,7 +102,7 @@ async function $do(
   const parsed = safeParse(
     request,
     (value) =>
-      z.parse(z.optional(operations.ListInboxRequest$outboundSchema), value),
+      z.parse(z.optional(operations.InboxListRequest$outboundSchema), value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -126,7 +127,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "listInbox",
+    operationID: "inboxList",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -155,21 +156,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -183,7 +171,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.ListInboxResponse,
+    operations.InboxListResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -192,7 +180,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -204,7 +192,7 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, operations.ListInboxResponse$inboundSchema),
+    M.json(200, operations.InboxListResponse$inboundSchema),
     M.jsonErr(400, errors.BadRequestError$inboundSchema),
     M.jsonErr(401, errors.UnauthorizedError$inboundSchema),
     M.jsonErr(403, errors.ForbiddenError$inboundSchema),
@@ -213,7 +201,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),

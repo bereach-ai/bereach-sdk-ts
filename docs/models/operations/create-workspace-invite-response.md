@@ -5,35 +5,50 @@ Invite created or listed
 
 ## Supported Types
 
-### `operations.ResponseBody1`
+### `operations.CreateWorkspaceInviteResponseBody1`
 
 ```typescript
-const value: operations.ResponseBody1 = {
+const value: operations.CreateWorkspaceInviteResponseBody1 = {
   success: true,
   invite: {
     id: "<id>",
-    email: "Ellis48@hotmail.com",
-    name: null,
+    email: "Briana.Renner@yahoo.com",
+    name: "<value>",
     code: "<value>",
-    maxUses: 949705,
-    useCount: 867079,
-    expiresAt: "1745675942128",
-    createdAt: "1732496019313",
+    maxUses: 113200,
+    useCount: 348933,
+    expiresAt: "1744363330649",
+    createdAt: "1722545149857",
   },
+  creditsUsed: 538260,
+  retryAfter: 715490,
 };
 ```
 
-### `operations.ResponseBody2`
+### `operations.CreateWorkspaceInviteResponseBody2`
 
 ```typescript
-const value: operations.ResponseBody2 = {
+const value: operations.CreateWorkspaceInviteResponseBody2 = {
   success: true,
-  invites: [],
+  invites: [
+    {
+      id: "<id>",
+      email: "Marlon49@gmail.com",
+      name: "<value>",
+      code: "<value>",
+      maxUses: 511240,
+      useCount: 257969,
+      expiresAt: "1747732612764",
+      createdAt: "1719599439104",
+    },
+  ],
   workspace: {
     tier: "<value>",
-    proSeatsIncluded: 669472,
-    proSeatsUsed: 313584,
+    proSeatsIncluded: 455311,
+    proSeatsUsed: 101401,
   },
+  creditsUsed: 396869,
+  retryAfter: 115536,
 };
 ```
 

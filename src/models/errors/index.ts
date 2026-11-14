@@ -4,7 +4,9 @@
 
 export * from "./bereach-default-error.js";
 export * from "./bereach-error.js";
-export * from "./collect-likes.js";
+export * from "./collect-engagers.js";
+export * from "./context-get-bad-request.js";
 export * from "./http-client-errors.js";
+export * from "./public-enrich-conflict.js";
 export * from "./response-validation-error.js";
 export * from "./sdk-validation-error.js";

@@ -5,6 +5,7 @@
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -27,63 +28,47 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Search LinkedIn Posts
+ * Search posts
  *
  * @remarks
- * # Search LinkedIn Posts
+ * # Search posts
  *
- * Search LinkedIn's content index for posts matching your keywords and filters. Returns structured post data including full text, engagement metrics, author info, and URLs.
+ * Find posts matching your keywords and filters. This is the same search as **publicFindPosts**, at the same price, in this address's own request and response fields. Returns post text, engagement counts, author info and URLs. The post authors are saved to your contacts.
  *
  * ## Required parameters
- * - **keywords** (string, required): The search terms to match against post content. Examples: `"AI automation"`, `"remote work trends"`, `"SaaS growth strategies"`.
+ * - **keywords** (string, required): searched as written. Quoted phrases and OR alternatives are kept: `"growth hacking" OR "growth marketing"`.
  *
- * ## Keyword syntax (Boolean operators)
- * Keywords support LinkedIn Boolean search syntax:
- * - **Exact phrase**: `"outreach automation"` — matches only that exact phrase
- * - **AND**: `AI AND marketing` — both terms required (spaces default to AND)
- * - **OR**: `"growth hacking" OR "growth marketing"` — either term
- * - **NOT**: `outreach NOT webinar` — exclude unwanted terms
- * - **Parentheses**: `(AI OR ML) AND "case study"` — group logic
- *
- * Operators must be **UPPERCASE**. Precedence: Quotes > Parentheses > NOT > AND > OR.
- *
- * ## Available filters
+ * ## Filters
  * | Filter | Type | Description |
  * |--------|------|-------------|
- * | `sortBy` | `"relevance"` \| `"date"` | Sort by relevance (default) or most recent first |
- * | `datePosted` | `"past-24h"` \| `"past-week"` \| `"past-month"` | Filter by publication recency |
- * | `contentType` | `"images"` \| `"videos"` \| `"documents"` | Filter by media type |
- * | `authorIndustry` | string[] | Author's industry IDs (resolve via `/search/linkedin/parameters` with type=`INDUSTRY`) |
- * | `authorCompany` | string[] | Author's company IDs (resolve via `/search/linkedin/parameters` with type=`COMPANY`) |
+ * | `datePosted` | `"past-24h"` \| `"past-week"` \| `"past-month"` | Only posts from this window |
+ * | `authorJobTitle` | string[] | The author's job title, free text; several are searched as alternatives |
+ * | `authorCompany` | string[] | Posts by people at this company, by name (one company) |
+ * | `contentType` | `"images"` \| `"videos"` \| `"documents"` | Only posts carrying this media (not with `authorCompany`) |
+ *
+ * `sortBy`, `authorIndustry` and `postedBy` are accepted and not applied: each is named in `ignoredFields`, with a NOT_SEARCHED warning saying why, as is any field this search does not read.
  *
  * ## Response fields (per item)
  * | Field | Type | Description |
  * |-------|------|-------------|
- * | `postUrl` | string | Direct URL to the LinkedIn post |
- * | `text` | string | Full post text content |
- * | `date` | number | Publication timestamp (ms since epoch) |
- * | `likesCount` | number | Total reactions |
- * | `commentsCount` | number | Total comments |
- * | `sharesCount` | number | Total shares/reposts |
- * | `author.name` | string | Author's display name |
- * | `author.profileUrl` | string | Author's LinkedIn profile URL |
- * | `author.headline` | string | Author's headline |
+ * | `postUrl` | string | Direct URL to the post |
+ * | `text` | string | Post text |
+ * | `date` | number\|null | Publication timestamp (ms since epoch) |
+ * | `likesCount` | number\|null | Total reactions |
+ * | `commentsCount` | number\|null | Total comments |
+ * | `sharesCount` | null | Not provided |
+ * | `postUrn` / `postId` | string\|null | The activity URN and id, for collect_engagers |
+ * | `author.name` / `author.profileUrl` / `author.headline` | string\|null | Who posted |
  * | `author.isCompany` | boolean | Whether the author is a company page |
- * | `isRepost` | boolean | Whether this is a repost of another post |
+ * | `isRepost` | null | Not provided |
  *
  * ## Pagination
- * - Default page size: 10, max: 50
- * - Use `start` + `count` to paginate: `start=0, count=10` → page 1, `start=10, count=10` → page 2
- * - Check `hasMore` in the response to know if more pages exist
- * - `paging.total` gives the estimated total number of results
- *
- * ## Example workflows
- * 1. **Content research**: Search for trending topics → analyze top posts → extract engagement patterns
- * 2. **Lead generation**: Search for posts about problems your product solves → extract author profiles
- * 3. **Competitive intelligence**: Search for competitor mentions → track sentiment and engagement
+ * - Default page size: 20, max 50
+ * - `start` 0 is the first page; any `start` past 0 returns the next posts this same search had not yet returned to you (not an exact offset)
+ * - `hasMore` says whether another page can come back; `paging.total` is always null
  *
  * ## Credits
- * 1 credit per 20 items returned (minimum 1 credit if any results, 0 if empty).
+ * Cost: 0,0025 € a post returned; a search that returns none costs one post.
  */
 export function searchPosts(
   client: BereachCore,
@@ -100,7 +85,7 @@ export function searchPosts(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -136,7 +121,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -205,21 +190,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -242,7 +214,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -263,7 +235,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),

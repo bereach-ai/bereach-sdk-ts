@@ -11,8 +11,7 @@ let value: ByCampaign = {
   contact: 360129,
   lead: 874515,
   qualified: 276385,
-  approved: 990039,
-  rejected: 58555,
+  rejected: 990039,
 };
 ```
 
@@ -25,5 +24,4 @@ let value: ByCampaign = {
 | `contact`          | *number*           | :heavy_check_mark: | N/A                |
 | `lead`             | *number*           | :heavy_check_mark: | N/A                |
 | `qualified`        | *number*           | :heavy_check_mark: | N/A                |
-| `approved`         | *number*           | :heavy_check_mark: | N/A                |
 | `rejected`         | *number*           | :heavy_check_mark: | N/A                |

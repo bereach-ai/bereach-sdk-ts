@@ -1,0 +1,33 @@
+# InboxListParticipant
+
+## Example Usage
+
+```typescript
+import { InboxListParticipant } from "bereach/models/operations";
+
+let value: InboxListParticipant = {
+  profileUrn: "<value>",
+  firstName: "Rosella",
+  lastName: "Runte",
+  profileUrl: "https://tragic-fen.net/",
+  headline: "<value>",
+  profilePicture: null,
+  publicIdentifier: "<value>",
+};
+```
+
+## Fields
+
+| Field                                                                                                                | Type                                                                                                                 | Required                                                                                                             | Description                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `profileUrn`                                                                                                         | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `firstName`                                                                                                          | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `lastName`                                                                                                           | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `profileUrl`                                                                                                         | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `headline`                                                                                                           | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `profilePicture`                                                                                                     | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `publicIdentifier`                                                                                                   | *string*                                                                                                             | :heavy_check_mark:                                                                                                   | N/A                                                                                                                  |
+| `isPremium`                                                                                                          | *boolean*                                                                                                            | :heavy_minus_sign:                                                                                                   | N/A                                                                                                                  |
+| `isVerified`                                                                                                         | *boolean*                                                                                                            | :heavy_minus_sign:                                                                                                   | Identity-verified profile.                                                                                           |
+| `memberBadgeType`                                                                                                    | *string*                                                                                                             | :heavy_minus_sign:                                                                                                   | Niche-authority badge, when LinkedIn attaches one.                                                                   |
+| `participantHostUrn`                                                                                                 | *string*                                                                                                             | :heavy_minus_sign:                                                                                                   | Raw identity urn. CAN BE A COMPANY rather than a person, which is what a page-admin reply looks like from this side. |

@@ -14,12 +14,8 @@ let value: UpdateAccountAccount = {
   headline: null,
   profilePic: "<value>",
   isValid: true,
-  proxyConfig: {
-    city: null,
-    mode: "<value>",
-    country: "Guyana",
-    rotationHours: 2067.37,
-  },
+  isActive: false,
+  proxyConfig: null,
 };
 ```
 
@@ -35,4 +31,5 @@ let value: UpdateAccountAccount = {
 | `headline`                                                                                                     | *string*                                                                                                       | :heavy_check_mark:                                                                                             | N/A                                                                                                            |
 | `profilePic`                                                                                                   | *string*                                                                                                       | :heavy_check_mark:                                                                                             | N/A                                                                                                            |
 | `isValid`                                                                                                      | *boolean*                                                                                                      | :heavy_check_mark:                                                                                             | N/A                                                                                                            |
+| `isActive`                                                                                                     | *boolean*                                                                                                      | :heavy_check_mark:                                                                                             | N/A                                                                                                            |
 | `proxyConfig`                                                                                                  | [operations.UpdateAccountProxyConfigResponse](../../models/operations/update-account-proxy-config-response.md) | :heavy_check_mark:                                                                                             | N/A                                                                                                            |

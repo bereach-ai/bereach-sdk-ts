@@ -5,6 +5,7 @@
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -30,15 +31,15 @@ import { Result } from "../types/fp.js";
  * Create a draft DM
  *
  * @remarks
- * Create a draft message for a contact. Set status to 'scheduled' with scheduledSendAt to queue for auto-send. 0 credits.
+ * Create a draft message for a contact. Pass status 'scheduled' to approve it at once: it is put in line and goes out once the person is connected. Nothing is sent at a set time. Cost: nothing; messages come with a trial, a plan or any money added.
  */
 export function scheduledMessagesCreate(
   client: BereachCore,
-  request: operations.CreateRequest,
+  request: operations.ScheduledMessageCreateRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.CreateResponse,
+    operations.ScheduledMessageCreateResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -47,7 +48,7 @@ export function scheduledMessagesCreate(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -69,12 +70,12 @@ export function scheduledMessagesCreate(
 
 async function $do(
   client: BereachCore,
-  request: operations.CreateRequest,
+  request: operations.ScheduledMessageCreateRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.CreateResponse,
+      operations.ScheduledMessageCreateResponse,
       | errors.BadRequestError
       | errors.UnauthorizedError
       | errors.ForbiddenError
@@ -83,7 +84,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -100,7 +101,8 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => z.parse(operations.CreateRequest$outboundSchema, value),
+    (value) =>
+      z.parse(operations.ScheduledMessageCreateRequest$outboundSchema, value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -123,7 +125,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "create",
+    operationID: "scheduledMessageCreate",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -152,21 +154,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -180,7 +169,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.CreateResponse,
+    operations.ScheduledMessageCreateResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -189,7 +178,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -201,7 +190,7 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(201, operations.CreateResponse$inboundSchema),
+    M.json(200, operations.ScheduledMessageCreateResponse$inboundSchema),
     M.jsonErr(400, errors.BadRequestError$inboundSchema),
     M.jsonErr(401, errors.UnauthorizedError$inboundSchema),
     M.jsonErr(403, errors.ForbiddenError$inboundSchema),
@@ -210,7 +199,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),

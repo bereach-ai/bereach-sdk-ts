@@ -1,0 +1,19 @@
+# ContextListRequest
+
+## Example Usage
+
+```typescript
+import { ContextListRequest } from "bereach/models/operations";
+
+let value: ContextListRequest = {};
+```
+
+## Fields
+
+| Field                                                                                                                          | Type                                                                                                                           | Required                                                                                                                       | Description                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| `scope`                                                                                                                        | *string*                                                                                                                       | :heavy_minus_sign:                                                                                                             | Filter by scope, prefix-matched: "user" matches owner context and every saved playbook, "user:playbook:" every saved playbook. |
+| `type`                                                                                                                         | *string*                                                                                                                       | :heavy_minus_sign:                                                                                                             | Filter by type (e.g. "playbook")                                                                                               |
+| `limit`                                                                                                                        | *number*                                                                                                                       | :heavy_minus_sign:                                                                                                             | Entries per page (default 20); continue with offset.                                                                           |
+| `offset`                                                                                                                       | *number*                                                                                                                       | :heavy_minus_sign:                                                                                                             | Pagination offset                                                                                                              |
+| `fullContent`                                                                                                                  | *boolean*                                                                                                                      | :heavy_minus_sign:                                                                                                             | Return full content instead of 200-char preview. Use only when retrieving a specific entry (combine with type+scope filters).  |

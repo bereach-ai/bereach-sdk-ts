@@ -8,27 +8,20 @@ import { ActiveCampaign } from "bereach/models/operations";
 let value: ActiveCampaign = {
   id: "<id>",
   name: "<value>",
-  type: "<value>",
-  status: "<value>",
-  context: "<value>",
   stageCounts: {
-    contact: 724861,
-    lead: 956973,
-    qualified: 918675,
-    approved: 652290,
-    rejected: 735213,
-    total: 930890,
+    contact: 434825,
+    lead: 724861,
+    qualified: 956973,
+    rejected: 918675,
+    total: 652290,
   },
 };
 ```
 
 ## Fields
 
-| Field                                                                                         | Type                                                                                          | Required                                                                                      | Description                                                                                   |
-| --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `id`                                                                                          | *string*                                                                                      | :heavy_check_mark:                                                                            | N/A                                                                                           |
-| `name`                                                                                        | *string*                                                                                      | :heavy_check_mark:                                                                            | N/A                                                                                           |
-| `type`                                                                                        | *string*                                                                                      | :heavy_check_mark:                                                                            | N/A                                                                                           |
-| `status`                                                                                      | *string*                                                                                      | :heavy_check_mark:                                                                            | N/A                                                                                           |
-| `context`                                                                                     | *any*                                                                                         | :heavy_check_mark:                                                                            | N/A                                                                                           |
-| `stageCounts`                                                                                 | [operations.AgentSnapshotStageCounts](../../models/operations/agent-snapshot-stage-counts.md) | :heavy_check_mark:                                                                            | N/A                                                                                           |
+| Field                                                                                   | Type                                                                                    | Required                                                                                | Description                                                                             |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `id`                                                                                    | *string*                                                                                | :heavy_check_mark:                                                                      | N/A                                                                                     |
+| `name`                                                                                  | *string*                                                                                | :heavy_check_mark:                                                                      | N/A                                                                                     |
+| `stageCounts`                                                                           | [operations.ContextGetStageCounts](../../models/operations/context-get-stage-counts.md) | :heavy_check_mark:                                                                      | N/A                                                                                     |
