@@ -5,6 +5,7 @@
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -27,67 +28,46 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Search LinkedIn Companies
+ * Search companies
  *
  * @remarks
- * # Search LinkedIn Companies
+ * # Search companies
  *
- * Find companies on LinkedIn by name, industry, location, and employee count. Returns structured company data including name, industry, location, and follower count.
+ * Find companies by what they do or their name, place, industry and size. This is the same search as **publicFindCompanies**, at the same price, in this address's own request and response fields. Returns name, profileUrl, summary, industry, location, logoUrl, and besides them the website, headcount and founding year. `profileUrl` is null when the company's page is not known: pass the row's `name` to **publicCompany** to resolve it.
  *
- * ## Parameters
- * - **keywords** (optional): Search terms matched against company name, description, and specialties
+ * A company's name alone (`keywords` with no location, industry or size, and no quote or OR) is looked up rather than searched: the answer is that one company, read as **publicCompany** reads it, or no company with a NOT_FOUND warning when no company page carries the name. Add a location or an industry to search companies by the words instead.
  *
- * ## Keyword syntax (Boolean operators)
- * Keywords support LinkedIn Boolean search syntax:
- * - **Exact phrase**: `"artificial intelligence"` — matches only that exact phrase
- * - **AND**: `fintech AND payments` — both terms required (spaces default to AND)
- * - **OR**: `SaaS OR "cloud computing"` — either term
- * - **NOT**: `consulting NOT staffing` — exclude unwanted terms
- * - **Parentheses**: `(AI OR ML) AND healthcare` — group logic
+ * ## Filters (at least one of keywords, location or industry)
+ * | Filter | Type | Description |
+ * |--------|------|-------------|
+ * | `keywords` | string | What the companies are or do, or a company's name |
+ * | `location` | string[] | Places by name (e.g. `["Paris","France"]`) |
+ * | `industry` | string[] | Industries by name (e.g. `["Software Development"]`) |
+ * | `companySize` | string[] | Band codes A to I or a human range, searched as one span |
  *
- * Operators must be **UPPERCASE**. Precedence: Quotes > Parentheses > NOT > AND > OR.
- *
- * ## Available filters
- * | Filter | Type | Description | Resolve IDs via |
- * |--------|------|-------------|------------------|
- * | `location` | string[] | HQ geo IDs | `/search/linkedin/parameters` type=`GEO` |
- * | `industry` | string[] | Industry IDs | `/search/linkedin/parameters` type=`INDUSTRY` |
- * | `companySize` | string[] | Employee count codes (see below) | — |
- *
- * ### Company size codes
- * | Code | Employees |
- * |------|-----------|
- * | `A` | 1–10 |
- * | `B` | 11–50 |
- * | `C` | 51–200 |
- * | `D` | 201–500 |
- * | `E` | 501–1,000 |
- * | `F` | 1,001–5,000 |
- * | `G` | 5,001–10,000 |
- * | `H` | 10,001+ |
- * | `I` | Self-employed |
+ * A numeric LinkedIn id for a place or an industry, and any field this search does not read, is accepted and not applied: each is named in `ignoredFields`, with a NOT_SEARCHED warning saying why.
  *
  * ## Response fields (per item)
  * | Field | Type | Description |
  * |-------|------|-------------|
- * | `name` | string | Company display name |
- * | `profileUrl` | string | LinkedIn company page URL |
- * | `summary` | string\|null | Company tagline/description |
- * | `industry` | string\|null | Primary industry |
- * | `location` | string\|null | HQ location |
- * | `followersCount` | number\|null | Number of LinkedIn followers |
+ * | `name` | string | Company name |
+ * | `profileUrl` | string\|null | LinkedIn company page, when known |
+ * | `summary` | string\|null | What the company says it does |
+ * | `industry` | string\|null | Industry |
+ * | `location` | string\|null | City and country code |
+ * | `followersCount` | number\|null | Followers, on a company looked up by its name; null otherwise |
+ * | `logoUrl` | string\|null | Logo |
+ * | `website` | string\|null | Homepage |
+ * | `employees` | number\|null | Headcount |
+ * | `foundedYear` | number\|null | Founding year |
  *
  * ## Pagination
- * - Default page size: 10, max: 50
- * - Use `start` + `count` to paginate. Check `hasMore` for more pages.
- *
- * ## Example workflows
- * 1. **Market research**: Search by industry + location → map the competitive landscape
- * 2. **Sales targeting**: Search by industry + size → build a list of target accounts
- * 3. **Partnership discovery**: Search by keywords + location → find potential partners
+ * - Default page size: 10, max 50
+ * - `start` 0 is the first page; any `start` past 0 returns the next companies this same search had not yet returned to you (not an exact offset)
+ * - `hasMore` says whether another page can come back; `paging.total` is always null
  *
  * ## Credits
- * 1 credit per 20 items returned (minimum 1 credit if any results, 0 if empty).
+ * Cost: 0,005 € a company returned; a search that returns none costs one company.
  */
 export function searchCompanies(
   client: BereachCore,
@@ -104,7 +84,7 @@ export function searchCompanies(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -140,7 +120,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -209,21 +189,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -246,7 +213,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -267,7 +234,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),

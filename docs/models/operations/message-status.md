@@ -1,5 +1,7 @@
 # MessageStatus
 
+The row's own status. For a first message, `scheduled` is legacy, read as `draft` (see `firstDm`); for a connection request, `scheduled` means approved and in the invitation queue.
+
 ## Example Usage
 
 ```typescript

@@ -1,0 +1,17 @@
+# ScheduledMessageCancelRequest
+
+## Example Usage
+
+```typescript
+import { ScheduledMessageCancelRequest } from "bereach/models/operations";
+
+let value: ScheduledMessageCancelRequest = {};
+```
+
+## Fields
+
+| Field                                                                                                                                                    | Type                                                                                                                                                     | Required                                                                                                                                                 | Description                                                                                                                                              |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `messageIds`                                                                                                                                             | *string*[]                                                                                                                                               | :heavy_minus_sign:                                                                                                                                       | The messages to take out of line, by the message ids a draft or the outbox returned.                                                                     |
+| `contactIds`                                                                                                                                             | *string*[]                                                                                                                                               | :heavy_minus_sign:                                                                                                                                       | Cancel everything still waiting for these contacts, within the list named by campaignId, which contactIds needs. Prefer messageIds, read from the outbox |
+| `campaignId`                                                                                                                                             | *string*                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                       | The list to cancel within                                                                                                                                |

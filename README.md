@@ -13,7 +13,7 @@ Developer-friendly & type-safe Typescript SDK specifically catered to leverage *
 <!-- Start Summary [summary] -->
 ## Summary
 
-BeReach API: BeReach | Unofficial Linkedin API
+BeReach API: BeReach | Agentic lead generation and outreach API
 <!-- End Summary [summary] -->
 
 <!-- Start Table of Contents [toc] -->
@@ -90,10 +90,10 @@ const bereach = new Bereach({
 });
 
 async function run() {
-  const result = await bereach.scrapers.collectLikes({
-    postUrl:
+  const result = await bereach.engagement.collectEngagers({
+    postUrls: [
       "https://www.linkedin.com/feed/update/urn:li:activity:1234567890123456789/",
-    start: 0,
+    ],
   });
 
   console.log(result);
@@ -124,10 +124,10 @@ const bereach = new Bereach({
 });
 
 async function run() {
-  const result = await bereach.scrapers.collectLikes({
-    postUrl:
+  const result = await bereach.engagement.collectEngagers({
+    postUrls: [
       "https://www.linkedin.com/feed/update/urn:li:activity:1234567890123456789/",
-    start: 0,
+    ],
   });
 
   console.log(result);
@@ -146,37 +146,12 @@ run();
 
 ### [Actions](docs/sdks/actions/README.md)
 
-* [connectProfile](docs/sdks/actions/README.md#connectprofile) - Send LinkedIn connection request
+* [connectProfile](docs/sdks/actions/README.md#connectprofile) - Queue LinkedIn connection requests
 * [listInvitations](docs/sdks/actions/README.md#listinvitations) - List received LinkedIn connection invitations
 * [acceptInvitation](docs/sdks/actions/README.md#acceptinvitation) - Accept a LinkedIn connection invitation
 * [sendMessage](docs/sdks/actions/README.md#sendmessage) - Send LinkedIn message
-* [replyToComment](docs/sdks/actions/README.md#replytocomment) - Reply to a LinkedIn comment
-* [likeComment](docs/sdks/actions/README.md#likecomment) - Like a LinkedIn comment
-* [publishPost](docs/sdks/actions/README.md#publishpost) - Publish or schedule a LinkedIn post
-* [createComment](docs/sdks/actions/README.md#createcomment) - Comment on a LinkedIn post
-* [likePost](docs/sdks/actions/README.md#likepost) - Like a LinkedIn post
-* [declineInvitation](docs/sdks/actions/README.md#declineinvitation) - Decline a connection invitation
 * [listSentInvitations](docs/sdks/actions/README.md#listsentinvitations) - List sent connection invitations
 * [withdrawInvitation](docs/sdks/actions/README.md#withdrawinvitation) - Withdraw a sent connection invitation
-* [followProfile](docs/sdks/actions/README.md#followprofile) - Follow a profile
-* [unfollowProfile](docs/sdks/actions/README.md#unfollowprofile) - Unfollow a profile
-* [editPost](docs/sdks/actions/README.md#editpost) - Edit a post
-* [editComment](docs/sdks/actions/README.md#editcomment) - Edit a comment
-* [editProfile](docs/sdks/actions/README.md#editprofile) - Edit LinkedIn profile headline/summary
-* [repostPost](docs/sdks/actions/README.md#repostpost) - Repost / share a post
-* [unlikePost](docs/sdks/actions/README.md#unlikepost) - Unlike a post
-* [unlikeComment](docs/sdks/actions/README.md#unlikecomment) - Unlike a comment
-* [savePost](docs/sdks/actions/README.md#savepost) - Save a post
-* [unsavePost](docs/sdks/actions/README.md#unsavepost) - Unsave a post
-* [followCompany](docs/sdks/actions/README.md#followcompany) - Follow a company
-* [unfollowCompany](docs/sdks/actions/README.md#unfollowcompany) - Unfollow a company
-
-### [Campaigns](docs/sdks/campaigns/README.md)
-
-* [~~filter~~](docs/sdks/campaigns/README.md#filter) - Check if campaign actions are completed :warning: **Deprecated**
-* [getStatus](docs/sdks/campaigns/README.md#getstatus) - Query per-profile action status within a campaign
-* [sync](docs/sdks/campaigns/README.md#sync) - Mark actions as completed without performing them
-* [stats](docs/sdks/campaigns/README.md#stats) - Get aggregate campaign statistics
 
 ### [Chat](docs/sdks/chat/README.md)
 
@@ -184,61 +159,26 @@ run();
 * [searchConversations](docs/sdks/chat/README.md#searchconversations) - Search LinkedIn conversations
 * [findConversation](docs/sdks/chat/README.md#findconversation) - Find a conversation with a specific person
 * [getMessages](docs/sdks/chat/README.md#getmessages) - Read messages from a conversation
-* [markSeen](docs/sdks/chat/README.md#markseen) - Mark a conversation as read
-* [markAllRead](docs/sdks/chat/README.md#markallread) - Mark all conversations as read
-* [star](docs/sdks/chat/README.md#star) - Star a conversation
-* [unstar](docs/sdks/chat/README.md#unstar) - Unstar a conversation
-* [listStarred](docs/sdks/chat/README.md#liststarred) - List starred conversations
-* [archive](docs/sdks/chat/README.md#archive) - Archive a conversation
-* [unarchive](docs/sdks/chat/README.md#unarchive) - Unarchive a conversation
-* [listArchived](docs/sdks/chat/README.md#listarchived) - List archived conversations
-* [react](docs/sdks/chat/README.md#react) - React to a message with emoji
-* [unreact](docs/sdks/chat/README.md#unreact) - Remove emoji reaction from a message
-* [sendTypingIndicator](docs/sdks/chat/README.md#sendtypingindicator) - Send typing indicator
 * [getUnreadCount](docs/sdks/chat/README.md#getunreadcount) - Get unread message count
-* [getConversationSummary](docs/sdks/chat/README.md#getconversationsummary) - Get conversation summary for a contact
-* [saveConversationSummary](docs/sdks/chat/README.md#saveconversationsummary) - Save conversation summary for a contact
-
-### [CompanyPages](docs/sdks/companypages/README.md)
-
-* [list](docs/sdks/companypages/README.md#list) - List company pages the user administers
-* [posts](docs/sdks/companypages/README.md#posts) - Get recent posts from a company page
-* [getPermissions](docs/sdks/companypages/README.md#getpermissions) - Get admin permissions for a company page
-* [getAnalytics](docs/sdks/companypages/README.md#getanalytics) - Get company page overview analytics
-
-### [Connectors](docs/sdks/connectors/README.md)
-
-* [pullTask](docs/sdks/connectors/README.md#pulltask) - Pull next task (connector)
-* [submitTaskResult](docs/sdks/connectors/README.md#submittaskresult) - Submit task result (connector)
-* [listConnectors](docs/sdks/connectors/README.md#listconnectors) - List connectors
-* [connectorHeartbeat](docs/sdks/connectors/README.md#connectorheartbeat) - Connector heartbeat
-* [agentSnapshot](docs/sdks/connectors/README.md#agentsnapshot) - Agent session snapshot
 
 ### [Contacts](docs/sdks/contacts/README.md)
 
-* [globalActivities](docs/sdks/contacts/README.md#globalactivities) - Global activity log
 * [upsert](docs/sdks/contacts/README.md#upsert) - Create or upsert contacts (no campaign required)
 * [search](docs/sdks/contacts/README.md#search) - Search and filter contacts
-* [get](docs/sdks/contacts/README.md#get) - Get a single contact with activities and campaigns
+* [get](docs/sdks/contacts/README.md#get) - Get a single contact with campaigns
 * [update](docs/sdks/contacts/README.md#update) - Update a contact
 * [listActivities](docs/sdks/contacts/README.md#listactivities) - List activities for a contact
-* [addActivities](docs/sdks/contacts/README.md#addactivities) - Log activities for a contact
-* [bulkUpdate](docs/sdks/contacts/README.md#bulkupdate) - Bulk update contacts
+* [discard](docs/sdks/contacts/README.md#discard) - Discard or restore people, in bulk
 * [stats](docs/sdks/contacts/README.md#stats) - Get contact funnel statistics
-* [listAgentStates](docs/sdks/contacts/README.md#listagentstates) - List all agent state entries
-* [getAgentState](docs/sdks/contacts/README.md#getagentstate) - Get agent state by key
-* [setAgentState](docs/sdks/contacts/README.md#setagentstate) - Set agent state by key
-* [deleteAgentState](docs/sdks/contacts/README.md#deleteagentstate) - Delete agent state by key
-* [patchAgentState](docs/sdks/contacts/README.md#patchagentstate) - Merge-update agent state by key
 * [listCampaigns](docs/sdks/contacts/README.md#listcampaigns) - List campaigns
-* [createCampaign](docs/sdks/contacts/README.md#createcampaign) - Create a lead-gen campaign
-* [getCampaign](docs/sdks/contacts/README.md#getcampaign) - Get a single campaign
-* [deleteCampaign](docs/sdks/contacts/README.md#deletecampaign) - Delete a campaign
-* [updateCampaign](docs/sdks/contacts/README.md#updatecampaign) - Update campaign settings
-* [campaignStatusTransition](docs/sdks/contacts/README.md#campaignstatustransition) - Campaign state transition
 * [listByCampaign](docs/sdks/contacts/README.md#listbycampaign) - List contacts in a campaign
 * [addToCampaign](docs/sdks/contacts/README.md#addtocampaign) - Add contacts to a campaign
 * [getByUrl](docs/sdks/contacts/README.md#getbyurl) - Look up contact by LinkedIn URL
+* [addSignals](docs/sdks/contacts/README.md#addsignals) - Add signals to a list
+* [checkFit](docs/sdks/contacts/README.md#checkfit) - Check fit on a list
+* [brief](docs/sdks/contacts/README.md#brief) - Brief one person
+* [findEmails](docs/sdks/contacts/README.md#findemails) - Find work emails
+* [findPhones](docs/sdks/contacts/README.md#findphones) - Find phone numbers
 
 ### [Context](docs/sdks/context/README.md)
 
@@ -246,72 +186,57 @@ run();
 * [set](docs/sdks/context/README.md#set) - Create or update a context entry
 * [delete](docs/sdks/context/README.md#delete) - Delete a context entry
 
-### [Cron](docs/sdks/cron/README.md)
+### [Engagement](docs/sdks/engagement/README.md)
 
-* [listSchedules](docs/sdks/cron/README.md#listschedules) - List active cron schedules
-* [updateSchedule](docs/sdks/cron/README.md#updateschedule) - Pause, resume, or delete a cron schedule
+* [collectEngagers](docs/sdks/engagement/README.md#collectengagers) - Collect people on a post
+* [collectPosts](docs/sdks/engagement/README.md#collectposts) - Collect posts of a profile
+* [visitProfile](docs/sdks/engagement/README.md#visitprofile) - Read one person's public profile (kept for existing callers)
+* [getFeed](docs/sdks/engagement/README.md#getfeed) - Get home feed
 
 ### [Profile](docs/sdks/profile/README.md)
 
 * [get](docs/sdks/profile/README.md#get) - Get authenticated user's LinkedIn profile
 * [listAccounts](docs/sdks/profile/README.md#listaccounts) - List all LinkedIn accounts for the authenticated user
 * [updateAccount](docs/sdks/profile/README.md#updateaccount) - Update a LinkedIn account (label, default)
-* [refresh](docs/sdks/profile/README.md#refresh) - Refresh authenticated user's LinkedIn profile
-* [posts](docs/sdks/profile/README.md#posts) - Get authenticated user's LinkedIn posts
-* [getFollowers](docs/sdks/profile/README.md#getfollowers) - Get authenticated user's LinkedIn followers
-* [getLimits](docs/sdks/profile/README.md#getlimits) - Get current LinkedIn rate limit status
-* [getCredits](docs/sdks/profile/README.md#getcredits) - Get current BeReach credit balance
-* [views](docs/sdks/profile/README.md#views) - Get profile views
-* [getSearchAppearances](docs/sdks/profile/README.md#getsearchappearances) - Get search appearances
-* [getPostAnalytics](docs/sdks/profile/README.md#getpostanalytics) - Get post analytics
-* [getFollowerAnalytics](docs/sdks/profile/README.md#getfolloweranalytics) - Get follower analytics
+* [getLimits](docs/sdks/profile/README.md#getlimits) - Get current LinkedIn quota status
+* [getConnectionStatus](docs/sdks/profile/README.md#getconnectionstatus) - Get the state of outgoing connection requests
+* [getCredits](docs/sdks/profile/README.md#getcredits) - Get what the workspace can still spend
 * [switchAccount](docs/sdks/profile/README.md#switchaccount) - Switch active LinkedIn account
 * [listConnections](docs/sdks/profile/README.md#listconnections) - List LinkedIn connections
-* [getMyActivity](docs/sdks/profile/README.md#getmyactivity) - Get recent activity (comments or reactions)
+* [listRecommendedPeople](docs/sdks/profile/README.md#listrecommendedpeople) - List the people suggested to you
+* [getMyPosts](docs/sdks/profile/README.md#getmyposts) - Get the authenticated user's own posts
 * [getSettings](docs/sdks/profile/README.md#getsettings) - Get account settings
 * [patchSettings](docs/sdks/profile/README.md#patchsettings) - Update account settings
-* [revalidateLinkedin](docs/sdks/profile/README.md#revalidatelinkedin) - Re-validate LinkedIn session
-* [getApiToken](docs/sdks/profile/README.md#getapitoken) - Get API token
-* [createApiToken](docs/sdks/profile/README.md#createapitoken) - Create API token
-* [deleteApiToken](docs/sdks/profile/README.md#deleteapitoken) - Delete API token
 
-### [SalesNav](docs/sdks/salesnav/README.md)
+### [Public](docs/sdks/public/README.md)
 
-* [search](docs/sdks/salesnav/README.md#search) - Sales Navigator Search — leads (people) & accounts (companies)
-* [people](docs/sdks/salesnav/README.md#people) - Sales Navigator People/Lead Search
-* [companies](docs/sdks/salesnav/README.md#companies) - Sales Navigator Company/Account Search
+* [publicProfile](docs/sdks/public/README.md#publicprofile) - Read a public profile
+* [publicFindPeople](docs/sdks/public/README.md#publicfindpeople) - Find people from public data
+* [publicFindCompanies](docs/sdks/public/README.md#publicfindcompanies) - Find companies from public data
+* [publicFindEmployees](docs/sdks/public/README.md#publicfindemployees) - Find the people at a company from public profiles
+* [publicCompany](docs/sdks/public/README.md#publiccompany) - Read a public company page
+* [publicFindPosts](docs/sdks/public/README.md#publicfindposts) - Find public posts by topic or by who posted
+* [publicFindSignals](docs/sdks/public/README.md#publicfindsignals) - Find people to contact because something just happened at their company
+* [publicEnrich](docs/sdks/public/README.md#publicenrich) - Enrich a list of contacts
+* [planSearches](docs/sdks/public/README.md#plansearches) - Turn any material into a plan of searches
+* [runSearches](docs/sdks/public/README.md#runsearches) - Run a plan of searches
 
 ### [ScheduledMessages](docs/sdks/scheduledmessages/README.md)
 
-* [list](docs/sdks/scheduledmessages/README.md#list) - List scheduled messages
+* [list](docs/sdks/scheduledmessages/README.md#list) - List first messages and where each stands
 * [create](docs/sdks/scheduledmessages/README.md#create) - Create a draft DM
-* [batchSchedule](docs/sdks/scheduledmessages/README.md#batchschedule) - Batch-schedule drafts for auto-send
-* [cancel](docs/sdks/scheduledmessages/README.md#cancel) - Cancel scheduled or draft messages
+* [batchSchedule](docs/sdks/scheduledmessages/README.md#batchschedule) - Put drafts in line to be sent
+* [update](docs/sdks/scheduledmessages/README.md#update) - Edit a draft DM
+* [cancel](docs/sdks/scheduledmessages/README.md#cancel) - Cancel messages
 * [reviewDrafts](docs/sdks/scheduledmessages/README.md#reviewdrafts) - Batch approve/reject draft DMs
-
-### [Scrapers](docs/sdks/scrapers/README.md)
-
-* [collectLikes](docs/sdks/scrapers/README.md#collectlikes) - Scrape LinkedIn post likes
-* [collectComments](docs/sdks/scrapers/README.md#collectcomments) - Scrape LinkedIn post comments
-* [collectCommentReplies](docs/sdks/scrapers/README.md#collectcommentreplies) - Scrape replies to a LinkedIn comment
-* [collectPosts](docs/sdks/scrapers/README.md#collectposts) - Scrape LinkedIn profile posts
-* [visitProfile](docs/sdks/scrapers/README.md#visitprofile) - Visit LinkedIn profile and extract contact data
-* [bulkVisitProfile](docs/sdks/scrapers/README.md#bulkvisitprofile) - Queue bulk LinkedIn profile visits (fire-and-forget)
-* [bulkVisitBatchStatus](docs/sdks/scrapers/README.md#bulkvisitbatchstatus) - Get bulk visit batch status
-* [visitCompany](docs/sdks/scrapers/README.md#visitcompany) - Visit LinkedIn company page and extract profile data
-* [listSavedPosts](docs/sdks/scrapers/README.md#listsavedposts) - List saved posts
-* [getFeed](docs/sdks/scrapers/README.md#getfeed) - Get home feed
-* [collectHashtagPosts](docs/sdks/scrapers/README.md#collecthashtagposts) - Collect posts from a hashtag
 
 ### [Search](docs/sdks/search/README.md)
 
-* [search](docs/sdks/search/README.md#search) - Unified LinkedIn Search — posts, people, companies, jobs
-* [posts](docs/sdks/search/README.md#posts) - Search LinkedIn Posts
-* [people](docs/sdks/search/README.md#people) - Search LinkedIn People
-* [companies](docs/sdks/search/README.md#companies) - Search LinkedIn Companies
-* [jobs](docs/sdks/search/README.md#jobs) - Search LinkedIn Jobs
-* [byUrl](docs/sdks/search/README.md#byurl) - Search LinkedIn by URL
-* [resolveParameters](docs/sdks/search/README.md#resolveparameters) - Resolve text to LinkedIn search parameter IDs (typeahead)
+* [posts](docs/sdks/search/README.md#posts) - Search posts
+* [people](docs/sdks/search/README.md#people) - Search people
+* [companies](docs/sdks/search/README.md#companies) - Search companies
+* [jobs](docs/sdks/search/README.md#jobs) - Search job ads
+* [searchParameters](docs/sdks/search/README.md#searchparameters) - Turn text into the ids LinkedIn filters take
 
 ### [Settings](docs/sdks/settings/README.md)
 
@@ -320,10 +245,8 @@ run();
 
 ### [Tasks](docs/sdks/tasks/README.md)
 
-* [listTasks](docs/sdks/tasks/README.md#listtasks) - List tasks
-* [cancelTask](docs/sdks/tasks/README.md#canceltask) - Cancel a task
 * [eventsFeed](docs/sdks/tasks/README.md#eventsfeed) - Poll for events
-* [cancelChain](docs/sdks/tasks/README.md#cancelchain) - Cancel a workflow chain
+* [agentSnapshot](docs/sdks/tasks/README.md#agentsnapshot) - Agent session snapshot
 
 ### [Workspace](docs/sdks/workspace/README.md)
 
@@ -351,145 +274,80 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 <summary>Available standalone functions</summary>
 
 - [`actionsAcceptInvitation`](docs/sdks/actions/README.md#acceptinvitation) - Accept a LinkedIn connection invitation
-- [`actionsConnectProfile`](docs/sdks/actions/README.md#connectprofile) - Send LinkedIn connection request
-- [`actionsCreateComment`](docs/sdks/actions/README.md#createcomment) - Comment on a LinkedIn post
-- [`actionsDeclineInvitation`](docs/sdks/actions/README.md#declineinvitation) - Decline a connection invitation
-- [`actionsEditComment`](docs/sdks/actions/README.md#editcomment) - Edit a comment
-- [`actionsEditPost`](docs/sdks/actions/README.md#editpost) - Edit a post
-- [`actionsEditProfile`](docs/sdks/actions/README.md#editprofile) - Edit LinkedIn profile headline/summary
-- [`actionsFollowCompany`](docs/sdks/actions/README.md#followcompany) - Follow a company
-- [`actionsFollowProfile`](docs/sdks/actions/README.md#followprofile) - Follow a profile
-- [`actionsLikeComment`](docs/sdks/actions/README.md#likecomment) - Like a LinkedIn comment
-- [`actionsLikePost`](docs/sdks/actions/README.md#likepost) - Like a LinkedIn post
+- [`actionsConnectProfile`](docs/sdks/actions/README.md#connectprofile) - Queue LinkedIn connection requests
 - [`actionsListInvitations`](docs/sdks/actions/README.md#listinvitations) - List received LinkedIn connection invitations
 - [`actionsListSentInvitations`](docs/sdks/actions/README.md#listsentinvitations) - List sent connection invitations
-- [`actionsPublishPost`](docs/sdks/actions/README.md#publishpost) - Publish or schedule a LinkedIn post
-- [`actionsReplyToComment`](docs/sdks/actions/README.md#replytocomment) - Reply to a LinkedIn comment
-- [`actionsRepostPost`](docs/sdks/actions/README.md#repostpost) - Repost / share a post
-- [`actionsSavePost`](docs/sdks/actions/README.md#savepost) - Save a post
 - [`actionsSendMessage`](docs/sdks/actions/README.md#sendmessage) - Send LinkedIn message
-- [`actionsUnfollowCompany`](docs/sdks/actions/README.md#unfollowcompany) - Unfollow a company
-- [`actionsUnfollowProfile`](docs/sdks/actions/README.md#unfollowprofile) - Unfollow a profile
-- [`actionsUnlikeComment`](docs/sdks/actions/README.md#unlikecomment) - Unlike a comment
-- [`actionsUnlikePost`](docs/sdks/actions/README.md#unlikepost) - Unlike a post
-- [`actionsUnsavePost`](docs/sdks/actions/README.md#unsavepost) - Unsave a post
 - [`actionsWithdrawInvitation`](docs/sdks/actions/README.md#withdrawinvitation) - Withdraw a sent connection invitation
-- [`campaignsGetStatus`](docs/sdks/campaigns/README.md#getstatus) - Query per-profile action status within a campaign
-- [`campaignsStats`](docs/sdks/campaigns/README.md#stats) - Get aggregate campaign statistics
-- [`campaignsSync`](docs/sdks/campaigns/README.md#sync) - Mark actions as completed without performing them
-- [`chatArchive`](docs/sdks/chat/README.md#archive) - Archive a conversation
 - [`chatFindConversation`](docs/sdks/chat/README.md#findconversation) - Find a conversation with a specific person
-- [`chatGetConversationSummary`](docs/sdks/chat/README.md#getconversationsummary) - Get conversation summary for a contact
 - [`chatGetMessages`](docs/sdks/chat/README.md#getmessages) - Read messages from a conversation
 - [`chatGetUnreadCount`](docs/sdks/chat/README.md#getunreadcount) - Get unread message count
-- [`chatListArchived`](docs/sdks/chat/README.md#listarchived) - List archived conversations
 - [`chatListInbox`](docs/sdks/chat/README.md#listinbox) - List LinkedIn inbox conversations
-- [`chatListStarred`](docs/sdks/chat/README.md#liststarred) - List starred conversations
-- [`chatMarkAllRead`](docs/sdks/chat/README.md#markallread) - Mark all conversations as read
-- [`chatMarkSeen`](docs/sdks/chat/README.md#markseen) - Mark a conversation as read
-- [`chatReact`](docs/sdks/chat/README.md#react) - React to a message with emoji
-- [`chatSaveConversationSummary`](docs/sdks/chat/README.md#saveconversationsummary) - Save conversation summary for a contact
 - [`chatSearchConversations`](docs/sdks/chat/README.md#searchconversations) - Search LinkedIn conversations
-- [`chatSendTypingIndicator`](docs/sdks/chat/README.md#sendtypingindicator) - Send typing indicator
-- [`chatStar`](docs/sdks/chat/README.md#star) - Star a conversation
-- [`chatUnarchive`](docs/sdks/chat/README.md#unarchive) - Unarchive a conversation
-- [`chatUnreact`](docs/sdks/chat/README.md#unreact) - Remove emoji reaction from a message
-- [`chatUnstar`](docs/sdks/chat/README.md#unstar) - Unstar a conversation
-- [`companyPagesGetAnalytics`](docs/sdks/companypages/README.md#getanalytics) - Get company page overview analytics
-- [`companyPagesGetPermissions`](docs/sdks/companypages/README.md#getpermissions) - Get admin permissions for a company page
-- [`companyPagesList`](docs/sdks/companypages/README.md#list) - List company pages the user administers
-- [`companyPagesPosts`](docs/sdks/companypages/README.md#posts) - Get recent posts from a company page
-- [`connectorsAgentSnapshot`](docs/sdks/connectors/README.md#agentsnapshot) - Agent session snapshot
-- [`connectorsConnectorHeartbeat`](docs/sdks/connectors/README.md#connectorheartbeat) - Connector heartbeat
-- [`connectorsListConnectors`](docs/sdks/connectors/README.md#listconnectors) - List connectors
-- [`connectorsPullTask`](docs/sdks/connectors/README.md#pulltask) - Pull next task (connector)
-- [`connectorsSubmitTaskResult`](docs/sdks/connectors/README.md#submittaskresult) - Submit task result (connector)
-- [`contactsAddActivities`](docs/sdks/contacts/README.md#addactivities) - Log activities for a contact
+- [`contactsAddSignals`](docs/sdks/contacts/README.md#addsignals) - Add signals to a list
 - [`contactsAddToCampaign`](docs/sdks/contacts/README.md#addtocampaign) - Add contacts to a campaign
-- [`contactsBulkUpdate`](docs/sdks/contacts/README.md#bulkupdate) - Bulk update contacts
-- [`contactsCampaignStatusTransition`](docs/sdks/contacts/README.md#campaignstatustransition) - Campaign state transition
-- [`contactsCreateCampaign`](docs/sdks/contacts/README.md#createcampaign) - Create a lead-gen campaign
-- [`contactsDeleteAgentState`](docs/sdks/contacts/README.md#deleteagentstate) - Delete agent state by key
-- [`contactsDeleteCampaign`](docs/sdks/contacts/README.md#deletecampaign) - Delete a campaign
-- [`contactsGet`](docs/sdks/contacts/README.md#get) - Get a single contact with activities and campaigns
-- [`contactsGetAgentState`](docs/sdks/contacts/README.md#getagentstate) - Get agent state by key
+- [`contactsBrief`](docs/sdks/contacts/README.md#brief) - Brief one person
+- [`contactsCheckFit`](docs/sdks/contacts/README.md#checkfit) - Check fit on a list
+- [`contactsDiscard`](docs/sdks/contacts/README.md#discard) - Discard or restore people, in bulk
+- [`contactsFindEmails`](docs/sdks/contacts/README.md#findemails) - Find work emails
+- [`contactsFindPhones`](docs/sdks/contacts/README.md#findphones) - Find phone numbers
+- [`contactsGet`](docs/sdks/contacts/README.md#get) - Get a single contact with campaigns
 - [`contactsGetByUrl`](docs/sdks/contacts/README.md#getbyurl) - Look up contact by LinkedIn URL
-- [`contactsGetCampaign`](docs/sdks/contacts/README.md#getcampaign) - Get a single campaign
-- [`contactsGlobalActivities`](docs/sdks/contacts/README.md#globalactivities) - Global activity log
 - [`contactsListActivities`](docs/sdks/contacts/README.md#listactivities) - List activities for a contact
-- [`contactsListAgentStates`](docs/sdks/contacts/README.md#listagentstates) - List all agent state entries
 - [`contactsListByCampaign`](docs/sdks/contacts/README.md#listbycampaign) - List contacts in a campaign
 - [`contactsListCampaigns`](docs/sdks/contacts/README.md#listcampaigns) - List campaigns
-- [`contactsPatchAgentState`](docs/sdks/contacts/README.md#patchagentstate) - Merge-update agent state by key
 - [`contactsSearch`](docs/sdks/contacts/README.md#search) - Search and filter contacts
-- [`contactsSetAgentState`](docs/sdks/contacts/README.md#setagentstate) - Set agent state by key
 - [`contactsStats`](docs/sdks/contacts/README.md#stats) - Get contact funnel statistics
 - [`contactsUpdate`](docs/sdks/contacts/README.md#update) - Update a contact
-- [`contactsUpdateCampaign`](docs/sdks/contacts/README.md#updatecampaign) - Update campaign settings
 - [`contactsUpsert`](docs/sdks/contacts/README.md#upsert) - Create or upsert contacts (no campaign required)
 - [`contextDelete`](docs/sdks/context/README.md#delete) - Delete a context entry
 - [`contextListEntries`](docs/sdks/context/README.md#listentries) - List context entries
 - [`contextSet`](docs/sdks/context/README.md#set) - Create or update a context entry
-- [`cronListSchedules`](docs/sdks/cron/README.md#listschedules) - List active cron schedules
-- [`cronUpdateSchedule`](docs/sdks/cron/README.md#updateschedule) - Pause, resume, or delete a cron schedule
-- [`profileCreateApiToken`](docs/sdks/profile/README.md#createapitoken) - Create API token
-- [`profileDeleteApiToken`](docs/sdks/profile/README.md#deleteapitoken) - Delete API token
+- [`engagementCollectEngagers`](docs/sdks/engagement/README.md#collectengagers) - Collect people on a post
+- [`engagementCollectPosts`](docs/sdks/engagement/README.md#collectposts) - Collect posts of a profile
+- [`engagementGetFeed`](docs/sdks/engagement/README.md#getfeed) - Get home feed
+- [`engagementVisitProfile`](docs/sdks/engagement/README.md#visitprofile) - Read one person's public profile (kept for existing callers)
 - [`profileGet`](docs/sdks/profile/README.md#get) - Get authenticated user's LinkedIn profile
-- [`profileGetApiToken`](docs/sdks/profile/README.md#getapitoken) - Get API token
-- [`profileGetCredits`](docs/sdks/profile/README.md#getcredits) - Get current BeReach credit balance
-- [`profileGetFollowerAnalytics`](docs/sdks/profile/README.md#getfolloweranalytics) - Get follower analytics
-- [`profileGetFollowers`](docs/sdks/profile/README.md#getfollowers) - Get authenticated user's LinkedIn followers
-- [`profileGetLimits`](docs/sdks/profile/README.md#getlimits) - Get current LinkedIn rate limit status
-- [`profileGetMyActivity`](docs/sdks/profile/README.md#getmyactivity) - Get recent activity (comments or reactions)
-- [`profileGetPostAnalytics`](docs/sdks/profile/README.md#getpostanalytics) - Get post analytics
-- [`profileGetSearchAppearances`](docs/sdks/profile/README.md#getsearchappearances) - Get search appearances
+- [`profileGetConnectionStatus`](docs/sdks/profile/README.md#getconnectionstatus) - Get the state of outgoing connection requests
+- [`profileGetCredits`](docs/sdks/profile/README.md#getcredits) - Get what the workspace can still spend
+- [`profileGetLimits`](docs/sdks/profile/README.md#getlimits) - Get current LinkedIn quota status
+- [`profileGetMyPosts`](docs/sdks/profile/README.md#getmyposts) - Get the authenticated user's own posts
 - [`profileGetSettings`](docs/sdks/profile/README.md#getsettings) - Get account settings
 - [`profileListAccounts`](docs/sdks/profile/README.md#listaccounts) - List all LinkedIn accounts for the authenticated user
 - [`profileListConnections`](docs/sdks/profile/README.md#listconnections) - List LinkedIn connections
+- [`profileListRecommendedPeople`](docs/sdks/profile/README.md#listrecommendedpeople) - List the people suggested to you
 - [`profilePatchSettings`](docs/sdks/profile/README.md#patchsettings) - Update account settings
-- [`profilePosts`](docs/sdks/profile/README.md#posts) - Get authenticated user's LinkedIn posts
-- [`profileRefresh`](docs/sdks/profile/README.md#refresh) - Refresh authenticated user's LinkedIn profile
-- [`profileRevalidateLinkedin`](docs/sdks/profile/README.md#revalidatelinkedin) - Re-validate LinkedIn session
 - [`profileSwitchAccount`](docs/sdks/profile/README.md#switchaccount) - Switch active LinkedIn account
 - [`profileUpdateAccount`](docs/sdks/profile/README.md#updateaccount) - Update a LinkedIn account (label, default)
-- [`profileViews`](docs/sdks/profile/README.md#views) - Get profile views
-- [`salesNavCompanies`](docs/sdks/salesnav/README.md#companies) - Sales Navigator Company/Account Search
-- [`salesNavPeople`](docs/sdks/salesnav/README.md#people) - Sales Navigator People/Lead Search
-- [`salesNavSearch`](docs/sdks/salesnav/README.md#search) - Sales Navigator Search — leads (people) & accounts (companies)
-- [`scheduledMessagesBatchSchedule`](docs/sdks/scheduledmessages/README.md#batchschedule) - Batch-schedule drafts for auto-send
-- [`scheduledMessagesCancel`](docs/sdks/scheduledmessages/README.md#cancel) - Cancel scheduled or draft messages
+- [`publicPlanSearches`](docs/sdks/public/README.md#plansearches) - Turn any material into a plan of searches
+- [`publicPublicCompany`](docs/sdks/public/README.md#publiccompany) - Read a public company page
+- [`publicPublicEnrich`](docs/sdks/public/README.md#publicenrich) - Enrich a list of contacts
+- [`publicPublicFindCompanies`](docs/sdks/public/README.md#publicfindcompanies) - Find companies from public data
+- [`publicPublicFindEmployees`](docs/sdks/public/README.md#publicfindemployees) - Find the people at a company from public profiles
+- [`publicPublicFindPeople`](docs/sdks/public/README.md#publicfindpeople) - Find people from public data
+- [`publicPublicFindPosts`](docs/sdks/public/README.md#publicfindposts) - Find public posts by topic or by who posted
+- [`publicPublicFindSignals`](docs/sdks/public/README.md#publicfindsignals) - Find people to contact because something just happened at their company
+- [`publicPublicProfile`](docs/sdks/public/README.md#publicprofile) - Read a public profile
+- [`publicRunSearches`](docs/sdks/public/README.md#runsearches) - Run a plan of searches
+- [`scheduledMessagesBatchSchedule`](docs/sdks/scheduledmessages/README.md#batchschedule) - Put drafts in line to be sent
+- [`scheduledMessagesCancel`](docs/sdks/scheduledmessages/README.md#cancel) - Cancel messages
 - [`scheduledMessagesCreate`](docs/sdks/scheduledmessages/README.md#create) - Create a draft DM
-- [`scheduledMessagesList`](docs/sdks/scheduledmessages/README.md#list) - List scheduled messages
+- [`scheduledMessagesList`](docs/sdks/scheduledmessages/README.md#list) - List first messages and where each stands
 - [`scheduledMessagesReviewDrafts`](docs/sdks/scheduledmessages/README.md#reviewdrafts) - Batch approve/reject draft DMs
-- [`scrapersBulkVisitBatchStatus`](docs/sdks/scrapers/README.md#bulkvisitbatchstatus) - Get bulk visit batch status
-- [`scrapersBulkVisitProfile`](docs/sdks/scrapers/README.md#bulkvisitprofile) - Queue bulk LinkedIn profile visits (fire-and-forget)
-- [`scrapersCollectCommentReplies`](docs/sdks/scrapers/README.md#collectcommentreplies) - Scrape replies to a LinkedIn comment
-- [`scrapersCollectComments`](docs/sdks/scrapers/README.md#collectcomments) - Scrape LinkedIn post comments
-- [`scrapersCollectHashtagPosts`](docs/sdks/scrapers/README.md#collecthashtagposts) - Collect posts from a hashtag
-- [`scrapersCollectLikes`](docs/sdks/scrapers/README.md#collectlikes) - Scrape LinkedIn post likes
-- [`scrapersCollectPosts`](docs/sdks/scrapers/README.md#collectposts) - Scrape LinkedIn profile posts
-- [`scrapersGetFeed`](docs/sdks/scrapers/README.md#getfeed) - Get home feed
-- [`scrapersListSavedPosts`](docs/sdks/scrapers/README.md#listsavedposts) - List saved posts
-- [`scrapersVisitCompany`](docs/sdks/scrapers/README.md#visitcompany) - Visit LinkedIn company page and extract profile data
-- [`scrapersVisitProfile`](docs/sdks/scrapers/README.md#visitprofile) - Visit LinkedIn profile and extract contact data
-- [`searchByUrl`](docs/sdks/search/README.md#byurl) - Search LinkedIn by URL
-- [`searchCompanies`](docs/sdks/search/README.md#companies) - Search LinkedIn Companies
-- [`searchJobs`](docs/sdks/search/README.md#jobs) - Search LinkedIn Jobs
-- [`searchPeople`](docs/sdks/search/README.md#people) - Search LinkedIn People
-- [`searchPosts`](docs/sdks/search/README.md#posts) - Search LinkedIn Posts
-- [`searchResolveParameters`](docs/sdks/search/README.md#resolveparameters) - Resolve text to LinkedIn search parameter IDs (typeahead)
-- [`searchSearch`](docs/sdks/search/README.md#search) - Unified LinkedIn Search — posts, people, companies, jobs
+- [`scheduledMessagesUpdate`](docs/sdks/scheduledmessages/README.md#update) - Edit a draft DM
+- [`searchCompanies`](docs/sdks/search/README.md#companies) - Search companies
+- [`searchJobs`](docs/sdks/search/README.md#jobs) - Search job ads
+- [`searchPeople`](docs/sdks/search/README.md#people) - Search people
+- [`searchPosts`](docs/sdks/search/README.md#posts) - Search posts
+- [`searchSearchParameters`](docs/sdks/search/README.md#searchparameters) - Turn text into the ids LinkedIn filters take
 - [`settingsGetDmPollingSettings`](docs/sdks/settings/README.md#getdmpollingsettings) - Get DM polling settings
 - [`settingsPatchDmPollingSettings`](docs/sdks/settings/README.md#patchdmpollingsettings) - Update DM polling settings
-- [`tasksCancelChain`](docs/sdks/tasks/README.md#cancelchain) - Cancel a workflow chain
-- [`tasksCancelTask`](docs/sdks/tasks/README.md#canceltask) - Cancel a task
+- [`tasksAgentSnapshot`](docs/sdks/tasks/README.md#agentsnapshot) - Agent session snapshot
 - [`tasksEventsFeed`](docs/sdks/tasks/README.md#eventsfeed) - Poll for events
-- [`tasksListTasks`](docs/sdks/tasks/README.md#listtasks) - List tasks
 - [`workspaceCreateWorkspaceInvite`](docs/sdks/workspace/README.md#createworkspaceinvite) - Create or list workspace invites
 - [`workspaceDeleteWorkspaceAccount`](docs/sdks/workspace/README.md#deleteworkspaceaccount) - Remove a LinkedIn account
 - [`workspaceDeleteWorkspaceInvite`](docs/sdks/workspace/README.md#deleteworkspaceinvite) - Delete a workspace invite
 - [`workspaceUpgradeWorkspaceAccount`](docs/sdks/workspace/README.md#upgradeworkspaceaccount) - Upgrade or downgrade account plan
-- ~~[`campaignsFilter`](docs/sdks/campaigns/README.md#filter)~~ - Check if campaign actions are completed :warning: **Deprecated**
 
 </details>
 <!-- End Standalone functions [standalone-funcs] -->
@@ -508,10 +366,10 @@ const bereach = new Bereach({
 });
 
 async function run() {
-  const result = await bereach.scrapers.collectLikes({
-    postUrl:
+  const result = await bereach.engagement.collectEngagers({
+    postUrls: [
       "https://www.linkedin.com/feed/update/urn:li:activity:1234567890123456789/",
-    start: 0,
+    ],
   }, {
     retries: {
       strategy: "backoff",
@@ -551,10 +409,10 @@ const bereach = new Bereach({
 });
 
 async function run() {
-  const result = await bereach.scrapers.collectLikes({
-    postUrl:
+  const result = await bereach.engagement.collectEngagers({
+    postUrls: [
       "https://www.linkedin.com/feed/update/urn:li:activity:1234567890123456789/",
-    start: 0,
+    ],
   });
 
   console.log(result);
@@ -590,10 +448,10 @@ const bereach = new Bereach({
 
 async function run() {
   try {
-    const result = await bereach.scrapers.collectLikes({
-      postUrl:
+    const result = await bereach.engagement.collectEngagers({
+      postUrls: [
         "https://www.linkedin.com/feed/update/urn:li:activity:1234567890123456789/",
-      start: 0,
+      ],
     });
 
     console.log(result);
@@ -608,7 +466,7 @@ async function run() {
       // Depending on the method different errors may be thrown
       if (error instanceof errors.BadRequestError) {
         console.log(error.data$.success); // boolean
-        console.log(error.data$.error); // operations.CollectLikesBadRequestError
+        console.log(error.data$.error); // operations.CollectEngagersBadRequestError
       }
     }
   }
@@ -619,21 +477,10 @@ run();
 ```
 
 ### Error Classes
-**Primary errors:**
+**Primary error:**
 * [`BereachError`](./src/models/errors/bereach-error.ts): The base class for HTTP error responses.
-  * [`BadRequestError`](./src/models/errors/bad-request-error.ts): The server cannot or will not process the request due to something that is perceived to be a client error. Status code `400`.
-  * [`UnauthorizedError`](./src/models/errors/unauthorized-error.ts): Although HTTP specifies "unauthorized", this response means "unauthenticated". Authenticate to continue. Status code `401`.
-  * [`ForbiddenError`](./src/models/errors/forbidden-error.ts): The client does not have access rights to the content. Status code `403`.
-  * [`NotFoundError`](./src/models/errors/not-found-error.ts): The server cannot find the requested resource. Status code `404`.
-  * [`ConflictError`](./src/models/errors/conflict-error.ts): The request conflicts with the current state of the server. Status code `409`.
-  * [`GoneError`](./src/models/errors/gone-error.ts): The requested content has been permanently deleted from the server. Status code `410`.
-  * [`UnprocessableEntityError`](./src/models/errors/unprocessable-entity-error.ts): The request was well-formed but was unable to be followed due to semantic errors. Status code `422`.
-  * [`TooManyRequestsError`](./src/models/errors/too-many-requests-error.ts): Rate limit exceeded. Read error.retryAfter for the wait time in seconds. Status code `429`.
-  * [`InternalServerError`](./src/models/errors/internal-server-error.ts): The server encountered a situation it does not know how to handle. Status code `500`.
-  * [`BadGatewayError`](./src/models/errors/bad-gateway-error.ts): LinkedIn returned a server error or the proxy connection failed. Retry after a few seconds. Status code `502`.
-  * [`ServiceUnavailableError`](./src/models/errors/service-unavailable-error.ts): Proxy capacity temporarily exceeded. Retry after a few seconds. Status code `503`.
 
-<details><summary>Less common errors (6)</summary>
+<details><summary>Less common errors (39)</summary>
 
 <br />
 
@@ -646,9 +493,44 @@ run();
 
 
 **Inherit from [`BereachError`](./src/models/errors/bereach-error.ts)**:
+* [`BadRequestError`](./src/models/errors/bad-request-error.ts): The server cannot or will not process the request due to something that is perceived to be a client error. Status code `400`. Applicable to 58 of 75 methods.*
+* [`UnauthorizedError`](./src/models/errors/unauthorized-error.ts): Although HTTP specifies "unauthorized", this response means "unauthenticated". Authenticate to continue. NOTE: 401 is also returned with code "linkedin_not_connected" on an endpoint that acts from your account (invitations, messages, your own network or inbox) when the caller IS authenticated but has no connected LinkedIn account: connect LinkedIn (not re-authenticate) to continue. Every other read never returns it. Status code `401`. Applicable to 58 of 75 methods.*
+* [`ForbiddenError`](./src/models/errors/forbidden-error.ts): The caller is authenticated but not allowed. Read error.code: subscription_required (API key or connector with no plan, running trial or money added, or whose trial was cancelled; error.message says how to turn it back on), free_draft_limit (a free-plan limit was reached), sales_nav_seat_inactive (no active Sales Navigator seat), or forbidden (not permitted). Status code `403`. Applicable to 58 of 75 methods.*
+* [`NotFoundError`](./src/models/errors/not-found-error.ts): The server cannot find the requested resource. Status code `404`. Applicable to 58 of 75 methods.*
+* [`ConflictError`](./src/models/errors/conflict-error.ts): The request conflicts with the current state of the server. Status code `409`. Applicable to 58 of 75 methods.*
+* [`GoneError`](./src/models/errors/gone-error.ts): The requested content has been permanently deleted from the server. Status code `410`. Applicable to 58 of 75 methods.*
+* [`UnprocessableEntityError`](./src/models/errors/unprocessable-entity-error.ts): The request was well-formed but was unable to be followed due to semantic errors. Status code `422`. Applicable to 58 of 75 methods.*
+* [`TooManyRequestsError`](./src/models/errors/too-many-requests-error.ts): Read error.quotaKind. credits: nothing is left to spend; add money at error.upgradeUrl. On a plan, error.retryAfter is when the monthly allowance refills. With error.details naming the workspace's five-hour usage limit ("search_workspace_window_budget"), every paid read resumes after error.retryAfter, or at once with money added by card at error.upgradeUrl, which no limit holds. With error.details naming the trial's included usage ("trial_provider_cost_cap"), money added by card at error.upgradeUrl goes on at once, and starting the plan ends the cap. Any other kind: wait error.retryAfter seconds. Status code `429`. Applicable to 58 of 75 methods.*
+* [`CollectEngagersInternalServerError`](./src/models/errors/collect-engagers-internal-server-error.ts): The server encountered a situation it does not know how to handle. Status code `500`. Applicable to 58 of 75 methods.*
+* [`BadGatewayError`](./src/models/errors/bad-gateway-error.ts): An upstream service returned an error. Retry after a few seconds. Status code `502`. Applicable to 58 of 75 methods.*
+* [`ServiceUnavailableError`](./src/models/errors/service-unavailable-error.ts): Capacity is temporarily exceeded. Retry after a few seconds. Status code `503`. Applicable to 58 of 75 methods.*
+* [`ResponseBodyBadRequestError1`](./src/models/errors/response-body-bad-request-error1.ts): The server cannot or will not process the request due to something that is perceived to be a client error. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `400`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyBadRequestError2`](./src/models/errors/response-body-bad-request-error2.ts): The server cannot or will not process the request due to something that is perceived to be a client error. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `400`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyUnauthorizedError1`](./src/models/errors/response-body-unauthorized-error1.ts): Although HTTP specifies "unauthorized", this response means "unauthenticated". Authenticate to continue. NOTE: 401 is also returned with code "linkedin_not_connected" on an endpoint that acts from your account (invitations, messages, your own network or inbox) when the caller IS authenticated but has no connected LinkedIn account: connect LinkedIn (not re-authenticate) to continue. Every other read never returns it. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `401`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyUnauthorizedError2`](./src/models/errors/response-body-unauthorized-error2.ts): Although HTTP specifies "unauthorized", this response means "unauthenticated". Authenticate to continue. NOTE: 401 is also returned with code "linkedin_not_connected" on an endpoint that acts from your account (invitations, messages, your own network or inbox) when the caller IS authenticated but has no connected LinkedIn account: connect LinkedIn (not re-authenticate) to continue. Every other read never returns it. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `401`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyForbiddenError1`](./src/models/errors/response-body-forbidden-error1.ts): The caller is authenticated but not allowed. Read code: subscription_required (API key or connector with no plan, running trial or money added, or whose trial was cancelled; error.message says how to turn it back on), free_draft_limit (a free-plan limit was reached), sales_nav_seat_inactive (no active Sales Navigator seat), or forbidden (not permitted). The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `403`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyForbiddenError2`](./src/models/errors/response-body-forbidden-error2.ts): The caller is authenticated but not allowed. Read code: subscription_required (API key or connector with no plan, running trial or money added, or whose trial was cancelled; error.message says how to turn it back on), free_draft_limit (a free-plan limit was reached), sales_nav_seat_inactive (no active Sales Navigator seat), or forbidden (not permitted). The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `403`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyNotFoundError1`](./src/models/errors/response-body-not-found-error1.ts): The server cannot find the requested resource. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `404`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyNotFoundError2`](./src/models/errors/response-body-not-found-error2.ts): The server cannot find the requested resource. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `404`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyConflictError1`](./src/models/errors/response-body-conflict-error1.ts): The request conflicts with the current state of the server. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `409`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyConflictError2`](./src/models/errors/response-body-conflict-error2.ts): The request conflicts with the current state of the server. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `409`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyGoneError1`](./src/models/errors/response-body-gone-error1.ts): The requested content has been permanently deleted from the server. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `410`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyGoneError2`](./src/models/errors/response-body-gone-error2.ts): The requested content has been permanently deleted from the server. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `410`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyUnprocessableEntityError1`](./src/models/errors/response-body-unprocessable-entity-error1.ts): The request was well-formed but was unable to be followed due to semantic errors. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `422`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyUnprocessableEntityError2`](./src/models/errors/response-body-unprocessable-entity-error2.ts): The request was well-formed but was unable to be followed due to semantic errors. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `422`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyTooManyRequestsError1`](./src/models/errors/response-body-too-many-requests-error1.ts): Read quotaKind. credits: nothing is left to spend; add money at upgradeUrl. On a plan, retryAfter is when the monthly allowance refills. With details naming the workspace's five-hour usage limit ("search_workspace_window_budget"), every paid read resumes after retryAfter, or at once with money added by card at upgradeUrl, which no limit holds. With details naming the trial's included usage ("trial_provider_cost_cap"), money added by card at upgradeUrl goes on at once, and starting the plan ends the cap. Any other kind: wait retryAfter seconds. The body is the flat `{ error: "<text>" }` form; a few answers use the envelope. Status code `429`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyTooManyRequestsError2`](./src/models/errors/response-body-too-many-requests-error2.ts): Read quotaKind. credits: nothing is left to spend; add money at upgradeUrl. On a plan, retryAfter is when the monthly allowance refills. With details naming the workspace's five-hour usage limit ("search_workspace_window_budget"), every paid read resumes after retryAfter, or at once with money added by card at upgradeUrl, which no limit holds. With details naming the trial's included usage ("trial_provider_cost_cap"), money added by card at upgradeUrl goes on at once, and starting the plan ends the cap. Any other kind: wait retryAfter seconds. The body is the flat `{ error: "<text>" }` form; a few answers use the envelope. Status code `429`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyInternalServerErrorError1`](./src/models/errors/response-body-internal-server-error-error1.ts): The server encountered a situation it does not know how to handle. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `500`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyInternalServerErrorError2`](./src/models/errors/response-body-internal-server-error-error2.ts): The server encountered a situation it does not know how to handle. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `500`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyBadGatewayError1`](./src/models/errors/response-body-bad-gateway-error1.ts): An upstream service returned an error. Retry after a few seconds. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `502`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyBadGatewayError2`](./src/models/errors/response-body-bad-gateway-error2.ts): An upstream service returned an error. Retry after a few seconds. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `502`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyServiceUnavailableError1`](./src/models/errors/response-body-service-unavailable-error1.ts): Capacity is temporarily exceeded. Retry after a few seconds. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `503`. Applicable to 17 of 75 methods.*
+* [`ResponseBodyServiceUnavailableError2`](./src/models/errors/response-body-service-unavailable-error2.ts): Capacity is temporarily exceeded. Retry after a few seconds. The body is the flat `{ error: "<text>" }` form, with `code` when the answer carries one; a few answers use the envelope. Status code `503`. Applicable to 17 of 75 methods.*
 * [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
 
 </details>
+
+\* Check [the method documentation](#available-resources-and-operations) to see if the error is applicable.
 <!-- End Error Handling [errors] -->
 
 <!-- Start Server Selection [server] -->
@@ -674,10 +556,10 @@ const bereach = new Bereach({
 });
 
 async function run() {
-  const result = await bereach.scrapers.collectLikes({
-    postUrl:
+  const result = await bereach.engagement.collectEngagers({
+    postUrls: [
       "https://www.linkedin.com/feed/update/urn:li:activity:1234567890123456789/",
-    start: 0,
+    ],
   });
 
   console.log(result);
@@ -699,10 +581,10 @@ const bereach = new Bereach({
 });
 
 async function run() {
-  const result = await bereach.scrapers.collectLikes({
-    postUrl:
+  const result = await bereach.engagement.collectEngagers({
+    postUrls: [
       "https://www.linkedin.com/feed/update/urn:li:activity:1234567890123456789/",
-    start: 0,
+    ],
   });
 
   console.log(result);
@@ -782,7 +664,7 @@ import { Bereach } from "bereach";
 const sdk = new Bereach({ debugLogger: console });
 ```
 
-You can also enable a default debug logger by setting an environment variable `BEREACH_DEBUG` to true.
+You can also enable a default debug logger by setting an environment variable `BEREACH_DEBUG` to `true`, `1`, `yes` or `on` (case-insensitive). Any other value leaves it off.
 <!-- End Debugging [debug] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->

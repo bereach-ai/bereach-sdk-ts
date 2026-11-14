@@ -4,7 +4,8 @@
 
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
-import { encodeJSON, encodeSimple } from "../lib/encodings.js";
+import { encodeFormQuery, encodeJSON, encodeSimple } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -30,15 +31,15 @@ import { Result } from "../types/fp.js";
  * Update a contact
  *
  * @remarks
- * Update lifecycle stage, hot score, notes, outreach status, follow-up date, tags, or profile data for a contact. 0 credits.
+ * Update notes, outreach status, tags or profile data for a person, or remove them from a list and bring them back. lifecycleStage is per-list: pass campaignId to scope the write to one list, or the request is rejected.
  */
 export function contactsUpdate(
   client: BereachCore,
-  request: operations.UpdateRequest,
+  request: operations.ContactsUpdateRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.UpdateResponse,
+    operations.ContactsUpdateResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -47,7 +48,7 @@ export function contactsUpdate(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -69,12 +70,12 @@ export function contactsUpdate(
 
 async function $do(
   client: BereachCore,
-  request: operations.UpdateRequest,
+  request: operations.ContactsUpdateRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.UpdateResponse,
+      operations.ContactsUpdateResponse,
       | errors.BadRequestError
       | errors.UnauthorizedError
       | errors.ForbiddenError
@@ -83,7 +84,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -100,7 +101,7 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => z.parse(operations.UpdateRequest$outboundSchema, value),
+    (value) => z.parse(operations.ContactsUpdateRequest$outboundSchema, value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -117,6 +118,10 @@ async function $do(
   };
   const path = pathToFunc("/contacts/{id}")(pathParams);
 
+  const query = encodeFormQuery({
+    "campaignId": payload.campaignId,
+  });
+
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -129,7 +134,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "update",
+    operationID: "contactsUpdate",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -147,6 +152,7 @@ async function $do(
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
+    query: query,
     body: body,
     userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
@@ -158,21 +164,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -186,7 +179,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.UpdateResponse,
+    operations.ContactsUpdateResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -195,7 +188,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -207,7 +200,7 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, operations.UpdateResponse$inboundSchema),
+    M.json(200, operations.ContactsUpdateResponse$inboundSchema),
     M.jsonErr(400, errors.BadRequestError$inboundSchema),
     M.jsonErr(401, errors.UnauthorizedError$inboundSchema),
     M.jsonErr(403, errors.ForbiddenError$inboundSchema),
@@ -216,7 +209,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),

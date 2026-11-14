@@ -5,7 +5,7 @@
 ```typescript
 import { EventsFeedType } from "bereach/models/operations";
 
-let value: EventsFeedType = "campaign:paused";
+let value: EventsFeedType = "credential:linkedin_long_broken";
 
 // Open enum: unrecognized values are captured as Unrecognized<string>
 ```
@@ -13,5 +13,5 @@ let value: EventsFeedType = "campaign:paused";
 ## Values
 
 ```typescript
-"task:completed" | "task:failed" | "reply:received" | "connection:accepted" | "campaign:target_reached" | "campaign:completed" | "campaign:paused" | Unrecognized<string>
+"reply:received" | "connection:accepted" | "campaign:rate_limited" | "campaign:linkedin_expired" | "credential:llm_error" | "credential:linkedin_long_broken" | Unrecognized<string>
 ```

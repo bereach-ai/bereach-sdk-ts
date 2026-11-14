@@ -1,0 +1,45 @@
+# ContactsCheckFitRun
+
+## Example Usage
+
+```typescript
+import { ContactsCheckFitRun } from "bereach/models/operations";
+
+let value: ContactsCheckFitRun = {
+  id: "<id>",
+  kind: "reasons",
+  state: "running",
+  total: 405341,
+  done: 871542,
+  found: 68243,
+  none: 216053,
+  failed: 289068,
+  skipped: 998201,
+  credits: 9284.16,
+  creditsMax: 5188.25,
+  startedAt: "<value>",
+};
+```
+
+## Fields
+
+| Field                                                                                                    | Type                                                                                                     | Required                                                                                                 | Description                                                                                              |
+| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `id`                                                                                                     | *string*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `kind`                                                                                                   | [operations.ContactsCheckFitRunKind](../../models/operations/contacts-check-fit-run-kind.md)             | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `state`                                                                                                  | [operations.ContactsCheckFitState](../../models/operations/contacts-check-fit-state.md)                  | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `stoppedReason`                                                                                          | [operations.ContactsCheckFitStoppedReason](../../models/operations/contacts-check-fit-stopped-reason.md) | :heavy_minus_sign:                                                                                       | N/A                                                                                                      |
+| `total`                                                                                                  | *number*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `done`                                                                                                   | *number*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `found`                                                                                                  | *number*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `none`                                                                                                   | *number*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `failed`                                                                                                 | *number*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `skipped`                                                                                                | *number*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `credits`                                                                                                | *number*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `creditsMax`                                                                                             | *number*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `startedAt`                                                                                              | *string*                                                                                                 | :heavy_check_mark:                                                                                       | N/A                                                                                                      |
+| `endedAt`                                                                                                | *string*                                                                                                 | :heavy_minus_sign:                                                                                       | N/A                                                                                                      |
+| `announcedAt`                                                                                            | *string*                                                                                                 | :heavy_minus_sign:                                                                                       | N/A                                                                                                      |
+| `stopRequestedAt`                                                                                        | *string*                                                                                                 | :heavy_minus_sign:                                                                                       | N/A                                                                                                      |
+| `contactIds`                                                                                             | *string*[]                                                                                               | :heavy_minus_sign:                                                                                       | N/A                                                                                                      |
+| `extra`                                                                                                  | Record<string, *number*>                                                                                 | :heavy_minus_sign:                                                                                       | N/A                                                                                                      |

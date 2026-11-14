@@ -8,10 +8,11 @@ import { ToMember } from "bereach/models/operations";
 let value: ToMember = {
   name: "<value>",
   headline: "<value>",
-  profileUrl: "https://insecure-octave.org/",
-  profilePicture: "<value>",
-  publicIdentifier: null,
-  profileUrn: "<value>",
+  profileUrl: "https://polished-term.biz/",
+  profilePicture: null,
+  publicIdentifier: "<value>",
+  profileUrn: null,
+  memberId: "<id>",
 };
 ```
 
@@ -25,3 +26,4 @@ let value: ToMember = {
 | `profilePicture`   | *string*           | :heavy_check_mark: | N/A                |
 | `publicIdentifier` | *string*           | :heavy_check_mark: | N/A                |
 | `profileUrn`       | *string*           | :heavy_check_mark: | N/A                |
+| `memberId`         | *string*           | :heavy_check_mark: | N/A                |

@@ -1,6 +1,6 @@
 {
   "name": "bereach",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "author": "Speakeasy",
   "type": "module",
   "main": "./esm/index.js",
@@ -45,10 +45,10 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/berea-ch/bereach-sdk-ts.git"
+    "url": "https://github.com/bereach-ai/bereach-sdk-ts.git"
   },
   "scripts": {
-    "lint": "oxlint --max-warnings=0 --deny-warnings 'src/**/*.{ts,tsx}'",
+    "lint": "oxlint --max-warnings=0 --deny-warnings --no-error-on-unmatched-pattern src",
     "build": "tsgo",
     "prepublishOnly": "npm run build"
   },
@@ -57,10 +57,10 @@
   },
   "devDependencies": {
     "@typescript/native-preview": "7.0.0-dev.20260302.1",
-    "oxlint": "^1.50.0",
+    "oxlint": "^1.60.0",
     "typescript": "~5.8.3"
   },
   "dependencies": {
-    "zod": "^3.25.65 || ^4.0.0"
+    "zod": "^3.25.65 || ^4.6.6"
   }
 }
