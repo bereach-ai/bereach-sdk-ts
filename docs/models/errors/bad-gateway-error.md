@@ -1,6 +1,6 @@
 # BadGatewayError
 
-LinkedIn returned a server error or the proxy connection failed. Retry after a few seconds.
+An upstream service returned an error. Retry after a few seconds.
 
 ## Example Usage
 
@@ -12,7 +12,7 @@ import { BadGatewayError } from "bereach/models/errors";
 
 ## Fields
 
-| Field                                                                                                | Type                                                                                                 | Required                                                                                             | Description                                                                                          |
-| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `success`                                                                                            | *false*                                                                                              | :heavy_minus_sign:                                                                                   | N/A                                                                                                  |
-| `error`                                                                                              | [operations.CollectLikesBadGatewayError](../../models/operations/collect-likes-bad-gateway-error.md) | :heavy_check_mark:                                                                                   | N/A                                                                                                  |
+| Field                                                                                                      | Type                                                                                                       | Required                                                                                                   | Description                                                                                                |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `success`                                                                                                  | *false*                                                                                                    | :heavy_minus_sign:                                                                                         | N/A                                                                                                        |
+| `error`                                                                                                    | [operations.CollectEngagersBadGatewayError](../../models/operations/collect-engagers-bad-gateway-error.md) | :heavy_check_mark:                                                                                         | N/A                                                                                                        |

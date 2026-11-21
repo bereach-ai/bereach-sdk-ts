@@ -1,5 +1,7 @@
 # MessageStatus
 
+The row's own status. `scheduled` is legacy, read as `draft` (see `firstDm`).
+
 ## Example Usage
 
 ```typescript

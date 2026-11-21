@@ -1,6 +1,6 @@
 
 <div align="center">
-    <a href="https://codespaces.new/berea-ch/bereach-sdk-ts.git/tree/main"><img src="https://github.com/codespaces/badge.svg" /></a>
+    <a href="https://codespaces.new/bereach-ai/bereach-sdk-ts.git/tree/main"><img src="https://github.com/codespaces/badge.svg" /></a>
 </div>
 <br>
 

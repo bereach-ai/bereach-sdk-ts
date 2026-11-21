@@ -1,0 +1,20 @@
+# ContactsBriefRequest
+
+## Example Usage
+
+```typescript
+import { ContactsBriefRequest } from "bereach/models/operations";
+
+let value: ContactsBriefRequest = {};
+```
+
+## Fields
+
+| Field                                                                                                                  | Type                                                                                                                   | Required                                                                                                               | Description                                                                                                            |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `profile`                                                                                                              | *string*                                                                                                               | :heavy_minus_sign:                                                                                                     | The person, as a profile address, a profile slug or a member id.                                                       |
+| `contactId`                                                                                                            | *string*                                                                                                               | :heavy_minus_sign:                                                                                                     | The person as a saved contact, instead of profile.                                                                     |
+| `campaignId`                                                                                                           | *string*                                                                                                               | :heavy_minus_sign:                                                                                                     | The list the person is read for: the brief then carries where they stand on it and the reason saved there.             |
+| `maxAgeDays`                                                                                                           | *number*                                                                                                               | :heavy_minus_sign:                                                                                                     | What was read about this person within this many days is reused, not read again (default 7); 0 reads every part again. |
+| `include`                                                                                                              | [operations.Include](../../models/operations/include.md)                                                               | :heavy_minus_sign:                                                                                                     | The parts to read, every one on by default; set a part false to leave it out.                                          |
+| `historyVerbatim`                                                                                                      | *number*                                                                                                               | :heavy_minus_sign:                                                                                                     | How many of the latest messages come back word for word (default 20); every message of the last 48 hours always does.  |
