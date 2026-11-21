@@ -3,6 +3,7 @@
  */
 
 import { BereachCore } from "../core.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { RequestOptions } from "../lib/sdks.js";
@@ -27,7 +28,7 @@ import { Result } from "../types/fp.js";
  * Get account settings
  *
  * @remarks
- * Returns user profile, location, proxy, Anthropic key status, subscription, LinkedIn accounts, and pending invites. 0 credits.
+ * Returns user profile, location, connection settings, subscription, LinkedIn accounts, and pending invites.
  */
 export function profileGetSettings(
   client: BereachCore,
@@ -35,17 +36,17 @@ export function profileGetSettings(
 ): APIPromise<
   Result<
     operations.GetSettingsResponse,
-    | errors.BadRequestError
-    | errors.UnauthorizedError
-    | errors.ForbiddenError
-    | errors.NotFoundError
-    | errors.ConflictError
-    | errors.GoneError
-    | errors.UnprocessableEntityError
-    | errors.TooManyRequestsError
-    | errors.InternalServerError
-    | errors.BadGatewayError
-    | errors.ServiceUnavailableError
+    | errors.GetSettingsBadRequest
+    | errors.GetSettingsUnauthorized
+    | errors.GetSettingsForbidden
+    | errors.GetSettingsNotFound
+    | errors.GetSettingsConflict
+    | errors.GetSettingsGone
+    | errors.GetSettingsUnprocessableEntity
+    | errors.GetSettingsTooManyRequests
+    | errors.GetSettingsInternalServerError
+    | errors.GetSettingsBadGateway
+    | errors.GetSettingsServiceUnavailable
     | BereachError
     | ResponseValidationError
     | ConnectionError
@@ -69,17 +70,17 @@ async function $do(
   [
     Result<
       operations.GetSettingsResponse,
-      | errors.BadRequestError
-      | errors.UnauthorizedError
-      | errors.ForbiddenError
-      | errors.NotFoundError
-      | errors.ConflictError
-      | errors.GoneError
-      | errors.UnprocessableEntityError
-      | errors.TooManyRequestsError
-      | errors.InternalServerError
-      | errors.BadGatewayError
-      | errors.ServiceUnavailableError
+      | errors.GetSettingsBadRequest
+      | errors.GetSettingsUnauthorized
+      | errors.GetSettingsForbidden
+      | errors.GetSettingsNotFound
+      | errors.GetSettingsConflict
+      | errors.GetSettingsGone
+      | errors.GetSettingsUnprocessableEntity
+      | errors.GetSettingsTooManyRequests
+      | errors.GetSettingsInternalServerError
+      | errors.GetSettingsBadGateway
+      | errors.GetSettingsServiceUnavailable
       | BereachError
       | ResponseValidationError
       | ConnectionError
@@ -133,21 +134,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -162,17 +150,17 @@ async function $do(
 
   const [result] = await M.match<
     operations.GetSettingsResponse,
-    | errors.BadRequestError
-    | errors.UnauthorizedError
-    | errors.ForbiddenError
-    | errors.NotFoundError
-    | errors.ConflictError
-    | errors.GoneError
-    | errors.UnprocessableEntityError
-    | errors.TooManyRequestsError
-    | errors.InternalServerError
-    | errors.BadGatewayError
-    | errors.ServiceUnavailableError
+    | errors.GetSettingsBadRequest
+    | errors.GetSettingsUnauthorized
+    | errors.GetSettingsForbidden
+    | errors.GetSettingsNotFound
+    | errors.GetSettingsConflict
+    | errors.GetSettingsGone
+    | errors.GetSettingsUnprocessableEntity
+    | errors.GetSettingsTooManyRequests
+    | errors.GetSettingsInternalServerError
+    | errors.GetSettingsBadGateway
+    | errors.GetSettingsServiceUnavailable
     | BereachError
     | ResponseValidationError
     | ConnectionError
@@ -183,17 +171,17 @@ async function $do(
     | SDKValidationError
   >(
     M.json(200, operations.GetSettingsResponse$inboundSchema),
-    M.jsonErr(400, errors.BadRequestError$inboundSchema),
-    M.jsonErr(401, errors.UnauthorizedError$inboundSchema),
-    M.jsonErr(403, errors.ForbiddenError$inboundSchema),
-    M.jsonErr(404, errors.NotFoundError$inboundSchema),
-    M.jsonErr(409, errors.ConflictError$inboundSchema),
-    M.jsonErr(410, errors.GoneError$inboundSchema),
-    M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
-    M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
-    M.jsonErr(502, errors.BadGatewayError$inboundSchema),
-    M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
+    M.jsonErr(400, errors.GetSettingsBadRequest$inboundSchema),
+    M.jsonErr(401, errors.GetSettingsUnauthorized$inboundSchema),
+    M.jsonErr(403, errors.GetSettingsForbidden$inboundSchema),
+    M.jsonErr(404, errors.GetSettingsNotFound$inboundSchema),
+    M.jsonErr(409, errors.GetSettingsConflict$inboundSchema),
+    M.jsonErr(410, errors.GetSettingsGone$inboundSchema),
+    M.jsonErr(422, errors.GetSettingsUnprocessableEntity$inboundSchema),
+    M.jsonErr(429, errors.GetSettingsTooManyRequests$inboundSchema),
+    M.jsonErr(500, errors.GetSettingsInternalServerError$inboundSchema),
+    M.jsonErr(502, errors.GetSettingsBadGateway$inboundSchema),
+    M.jsonErr(503, errors.GetSettingsServiceUnavailable$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req, { extraFields: responseFields });

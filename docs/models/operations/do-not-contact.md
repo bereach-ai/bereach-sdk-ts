@@ -1,15 +1,17 @@
 # DoNotContact
 
-## Example Usage
+
+## Supported Types
+
+### `operations.DoNotContactEnum`
 
 ```typescript
-import { DoNotContact } from "bereach/models/operations";
-
-let value: DoNotContact = "true";
+const value: operations.DoNotContactEnum = "false";
 ```
 
-## Values
+### `boolean`
 
 ```typescript
-"true" | "false"
+const value: boolean = true;
 ```
+

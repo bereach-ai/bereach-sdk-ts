@@ -5,6 +5,7 @@
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
 import { encodeJSON } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
@@ -30,7 +31,7 @@ import { Result } from "../types/fp.js";
  * Update account settings
  *
  * @remarks
- * Update user country, city, phone, or Anthropic API key. Location changes propagate to proxy config. Anthropic key is validated before saving. 0 credits.
+ * Update user country, city, or phone. A location change also updates the connection settings of the accounts.
  */
 export function profilePatchSettings(
   client: BereachCore,
@@ -39,17 +40,17 @@ export function profilePatchSettings(
 ): APIPromise<
   Result<
     operations.PatchSettingsResponse,
-    | errors.BadRequestError
-    | errors.UnauthorizedError
-    | errors.ForbiddenError
-    | errors.NotFoundError
-    | errors.ConflictError
-    | errors.GoneError
-    | errors.UnprocessableEntityError
-    | errors.TooManyRequestsError
-    | errors.InternalServerError
-    | errors.BadGatewayError
-    | errors.ServiceUnavailableError
+    | errors.PatchSettingsBadRequest
+    | errors.PatchSettingsUnauthorized
+    | errors.PatchSettingsForbidden
+    | errors.PatchSettingsNotFound
+    | errors.PatchSettingsConflict
+    | errors.PatchSettingsGone
+    | errors.PatchSettingsUnprocessableEntity
+    | errors.PatchSettingsTooManyRequests
+    | errors.PatchSettingsInternalServerError
+    | errors.PatchSettingsBadGateway
+    | errors.PatchSettingsServiceUnavailable
     | BereachError
     | ResponseValidationError
     | ConnectionError
@@ -75,17 +76,17 @@ async function $do(
   [
     Result<
       operations.PatchSettingsResponse,
-      | errors.BadRequestError
-      | errors.UnauthorizedError
-      | errors.ForbiddenError
-      | errors.NotFoundError
-      | errors.ConflictError
-      | errors.GoneError
-      | errors.UnprocessableEntityError
-      | errors.TooManyRequestsError
-      | errors.InternalServerError
-      | errors.BadGatewayError
-      | errors.ServiceUnavailableError
+      | errors.PatchSettingsBadRequest
+      | errors.PatchSettingsUnauthorized
+      | errors.PatchSettingsForbidden
+      | errors.PatchSettingsNotFound
+      | errors.PatchSettingsConflict
+      | errors.PatchSettingsGone
+      | errors.PatchSettingsUnprocessableEntity
+      | errors.PatchSettingsTooManyRequests
+      | errors.PatchSettingsInternalServerError
+      | errors.PatchSettingsBadGateway
+      | errors.PatchSettingsServiceUnavailable
       | BereachError
       | ResponseValidationError
       | ConnectionError
@@ -152,21 +153,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -181,17 +169,17 @@ async function $do(
 
   const [result] = await M.match<
     operations.PatchSettingsResponse,
-    | errors.BadRequestError
-    | errors.UnauthorizedError
-    | errors.ForbiddenError
-    | errors.NotFoundError
-    | errors.ConflictError
-    | errors.GoneError
-    | errors.UnprocessableEntityError
-    | errors.TooManyRequestsError
-    | errors.InternalServerError
-    | errors.BadGatewayError
-    | errors.ServiceUnavailableError
+    | errors.PatchSettingsBadRequest
+    | errors.PatchSettingsUnauthorized
+    | errors.PatchSettingsForbidden
+    | errors.PatchSettingsNotFound
+    | errors.PatchSettingsConflict
+    | errors.PatchSettingsGone
+    | errors.PatchSettingsUnprocessableEntity
+    | errors.PatchSettingsTooManyRequests
+    | errors.PatchSettingsInternalServerError
+    | errors.PatchSettingsBadGateway
+    | errors.PatchSettingsServiceUnavailable
     | BereachError
     | ResponseValidationError
     | ConnectionError
@@ -202,17 +190,17 @@ async function $do(
     | SDKValidationError
   >(
     M.json(200, operations.PatchSettingsResponse$inboundSchema),
-    M.jsonErr(400, errors.BadRequestError$inboundSchema),
-    M.jsonErr(401, errors.UnauthorizedError$inboundSchema),
-    M.jsonErr(403, errors.ForbiddenError$inboundSchema),
-    M.jsonErr(404, errors.NotFoundError$inboundSchema),
-    M.jsonErr(409, errors.ConflictError$inboundSchema),
-    M.jsonErr(410, errors.GoneError$inboundSchema),
-    M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
-    M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
-    M.jsonErr(502, errors.BadGatewayError$inboundSchema),
-    M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
+    M.jsonErr(400, errors.PatchSettingsBadRequest$inboundSchema),
+    M.jsonErr(401, errors.PatchSettingsUnauthorized$inboundSchema),
+    M.jsonErr(403, errors.PatchSettingsForbidden$inboundSchema),
+    M.jsonErr(404, errors.PatchSettingsNotFound$inboundSchema),
+    M.jsonErr(409, errors.PatchSettingsConflict$inboundSchema),
+    M.jsonErr(410, errors.PatchSettingsGone$inboundSchema),
+    M.jsonErr(422, errors.PatchSettingsUnprocessableEntity$inboundSchema),
+    M.jsonErr(429, errors.PatchSettingsTooManyRequests$inboundSchema),
+    M.jsonErr(500, errors.PatchSettingsInternalServerError$inboundSchema),
+    M.jsonErr(502, errors.PatchSettingsBadGateway$inboundSchema),
+    M.jsonErr(503, errors.PatchSettingsServiceUnavailable$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req, { extraFields: responseFields });

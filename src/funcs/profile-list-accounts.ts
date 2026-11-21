@@ -3,6 +3,7 @@
  */
 
 import { BereachCore } from "../core.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { RequestOptions } from "../lib/sdks.js";
@@ -27,7 +28,7 @@ import { Result } from "../types/fp.js";
  * List all LinkedIn accounts for the authenticated user
  *
  * @remarks
- * Returns all LinkedIn accounts connected by the user. Each account has credentials and profile info. The `isCurrent` flag indicates which account the current API token is bound to. DB-only endpoint — 0 credits.
+ * Returns all LinkedIn accounts connected by the user. Each account has credentials and profile info. The `isCurrent` flag indicates which account the current API token is bound to.
  */
 export function profileListAccounts(
   client: BereachCore,
@@ -35,17 +36,17 @@ export function profileListAccounts(
 ): APIPromise<
   Result<
     operations.ListAccountsResponse,
-    | errors.BadRequestError
-    | errors.UnauthorizedError
-    | errors.ForbiddenError
-    | errors.NotFoundError
-    | errors.ConflictError
-    | errors.GoneError
-    | errors.UnprocessableEntityError
-    | errors.TooManyRequestsError
-    | errors.InternalServerError
-    | errors.BadGatewayError
-    | errors.ServiceUnavailableError
+    | errors.ListAccountsBadRequest
+    | errors.ListAccountsUnauthorized
+    | errors.ListAccountsForbidden
+    | errors.ListAccountsNotFound
+    | errors.ListAccountsConflict
+    | errors.ListAccountsGone
+    | errors.ListAccountsUnprocessableEntity
+    | errors.ListAccountsTooManyRequests
+    | errors.ListAccountsInternalServerError
+    | errors.ListAccountsBadGateway
+    | errors.ListAccountsServiceUnavailable
     | BereachError
     | ResponseValidationError
     | ConnectionError
@@ -69,17 +70,17 @@ async function $do(
   [
     Result<
       operations.ListAccountsResponse,
-      | errors.BadRequestError
-      | errors.UnauthorizedError
-      | errors.ForbiddenError
-      | errors.NotFoundError
-      | errors.ConflictError
-      | errors.GoneError
-      | errors.UnprocessableEntityError
-      | errors.TooManyRequestsError
-      | errors.InternalServerError
-      | errors.BadGatewayError
-      | errors.ServiceUnavailableError
+      | errors.ListAccountsBadRequest
+      | errors.ListAccountsUnauthorized
+      | errors.ListAccountsForbidden
+      | errors.ListAccountsNotFound
+      | errors.ListAccountsConflict
+      | errors.ListAccountsGone
+      | errors.ListAccountsUnprocessableEntity
+      | errors.ListAccountsTooManyRequests
+      | errors.ListAccountsInternalServerError
+      | errors.ListAccountsBadGateway
+      | errors.ListAccountsServiceUnavailable
       | BereachError
       | ResponseValidationError
       | ConnectionError
@@ -133,21 +134,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -162,17 +150,17 @@ async function $do(
 
   const [result] = await M.match<
     operations.ListAccountsResponse,
-    | errors.BadRequestError
-    | errors.UnauthorizedError
-    | errors.ForbiddenError
-    | errors.NotFoundError
-    | errors.ConflictError
-    | errors.GoneError
-    | errors.UnprocessableEntityError
-    | errors.TooManyRequestsError
-    | errors.InternalServerError
-    | errors.BadGatewayError
-    | errors.ServiceUnavailableError
+    | errors.ListAccountsBadRequest
+    | errors.ListAccountsUnauthorized
+    | errors.ListAccountsForbidden
+    | errors.ListAccountsNotFound
+    | errors.ListAccountsConflict
+    | errors.ListAccountsGone
+    | errors.ListAccountsUnprocessableEntity
+    | errors.ListAccountsTooManyRequests
+    | errors.ListAccountsInternalServerError
+    | errors.ListAccountsBadGateway
+    | errors.ListAccountsServiceUnavailable
     | BereachError
     | ResponseValidationError
     | ConnectionError
@@ -183,17 +171,17 @@ async function $do(
     | SDKValidationError
   >(
     M.json(200, operations.ListAccountsResponse$inboundSchema),
-    M.jsonErr(400, errors.BadRequestError$inboundSchema),
-    M.jsonErr(401, errors.UnauthorizedError$inboundSchema),
-    M.jsonErr(403, errors.ForbiddenError$inboundSchema),
-    M.jsonErr(404, errors.NotFoundError$inboundSchema),
-    M.jsonErr(409, errors.ConflictError$inboundSchema),
-    M.jsonErr(410, errors.GoneError$inboundSchema),
-    M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
-    M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
-    M.jsonErr(502, errors.BadGatewayError$inboundSchema),
-    M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
+    M.jsonErr(400, errors.ListAccountsBadRequest$inboundSchema),
+    M.jsonErr(401, errors.ListAccountsUnauthorized$inboundSchema),
+    M.jsonErr(403, errors.ListAccountsForbidden$inboundSchema),
+    M.jsonErr(404, errors.ListAccountsNotFound$inboundSchema),
+    M.jsonErr(409, errors.ListAccountsConflict$inboundSchema),
+    M.jsonErr(410, errors.ListAccountsGone$inboundSchema),
+    M.jsonErr(422, errors.ListAccountsUnprocessableEntity$inboundSchema),
+    M.jsonErr(429, errors.ListAccountsTooManyRequests$inboundSchema),
+    M.jsonErr(500, errors.ListAccountsInternalServerError$inboundSchema),
+    M.jsonErr(502, errors.ListAccountsBadGateway$inboundSchema),
+    M.jsonErr(503, errors.ListAccountsServiceUnavailable$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req, { extraFields: responseFields });

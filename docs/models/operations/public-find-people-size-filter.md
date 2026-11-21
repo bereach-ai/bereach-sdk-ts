@@ -1,0 +1,34 @@
+# PublicFindPeopleSizeFilter
+
+What the company-size band did, present whenever the ask carried one.
+
+## Example Usage
+
+```typescript
+import { PublicFindPeopleSizeFilter } from "bereach/models/operations";
+
+let value: PublicFindPeopleSizeFilter = {
+  min: 6894.33,
+  max: 1464.93,
+  kept: 4382.14,
+  outOfBand: 4190.26,
+  sizeUnknown: 9724.31,
+  sizeCheckFailed: 5522.93,
+  applied: true,
+  bandKeepsNobody: false,
+};
+```
+
+## Fields
+
+| Field                                                                                                                                            | Type                                                                                                                                             | Required                                                                                                                                         | Description                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `min`                                                                                                                                            | *number*                                                                                                                                         | :heavy_check_mark:                                                                                                                               | The smallest employer size asked, or null.                                                                                                       |
+| `max`                                                                                                                                            | *number*                                                                                                                                         | :heavy_check_mark:                                                                                                                               | The largest employer size asked, or null.                                                                                                        |
+| `kept`                                                                                                                                           | *number*                                                                                                                                         | :heavy_check_mark:                                                                                                                               | People kept because their employer's own record is inside the size.                                                                              |
+| `outOfBand`                                                                                                                                      | *number*                                                                                                                                         | :heavy_check_mark:                                                                                                                               | On-topic people left out because their employer is outside the size.                                                                             |
+| `sizeUnknown`                                                                                                                                    | *number*                                                                                                                                         | :heavy_check_mark:                                                                                                                               | On-topic people left out because their employer's size is not known.                                                                             |
+| `sizeCheckFailed`                                                                                                                                | *number*                                                                                                                                         | :heavy_check_mark:                                                                                                                               | Of those, the ones whose employer could not be checked just now.                                                                                 |
+| `applied`                                                                                                                                        | *boolean*                                                                                                                                        | :heavy_check_mark:                                                                                                                               | False when the size was not applied to this search; reason says why.                                                                             |
+| `reason`                                                                                                                                         | [operations.SizeFilterReason](../../models/operations/size-filter-reason.md)                                                                     | :heavy_minus_sign:                                                                                                                               | Why it was not applied: the search names its answer, the size came from the saved target rather than the ask, or the request did not ask for it. |
+| `bandKeepsNobody`                                                                                                                                | *boolean*                                                                                                                                        | :heavy_check_mark:                                                                                                                               | The search stopped after two searches in a row found nobody at that size.                                                                        |

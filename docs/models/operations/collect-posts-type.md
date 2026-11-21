@@ -1,5 +1,7 @@
 # CollectPostsType
 
+The kind of address in postUrn, NOT the post's format: posts read from public records are always addressed by their 'activity' id. Read the format from media.
+
 ## Example Usage
 
 ```typescript

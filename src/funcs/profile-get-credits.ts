@@ -3,6 +3,7 @@
  */
 
 import { BereachCore } from "../core.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { RequestOptions } from "../lib/sdks.js";
@@ -24,10 +25,10 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Get current BeReach credit balance
+ * Get what the workspace can still spend
  *
  * @remarks
- * Returns the current credit balance for the workspace. Includes credits used, total limit, remaining credits, usage percentage, and whether credits are unlimited. When isUnlimited is true, limit and remaining are null — skip credit budgeting. No credits consumed.
+ * Returns what the workspace can still spend, in credits for code: the allowance used and its size for the current pool period (a calendar month on a plan or trial; on the free tier a one-time gift that never renews), the money added under pay as you go (topUp, never expiring, and the rate it was bought at), and remaining, which is the allowance left plus topUp. When isUnlimited is true, limit and remaining are null: skip credit budgeting. limits says the two buckets apart: the included use (allowance), held by the five-hour usage limit and on a trial its cap (each one's share, when the window resets, heldBy), and the money added by card (topUp), which no limit holds; while a limit holds the allowance, paid reads are paid from topUp alone.
  */
 export function profileGetCredits(
   client: BereachCore,
@@ -43,7 +44,7 @@ export function profileGetCredits(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -77,7 +78,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -133,21 +134,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -170,7 +158,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -191,7 +179,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),
