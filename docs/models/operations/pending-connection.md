@@ -1,6 +1,6 @@
 # PendingConnection
 
-Connection request status: 'pending' if request was sent successfully, 'failed' if request failed today, 'none' if not tracked
+'pending' when an invitation to this person went out in the last 7 days, otherwise 'none'.
 
 ## Example Usage
 
@@ -15,5 +15,5 @@ let value: PendingConnection = "pending";
 ## Values
 
 ```typescript
-"pending" | "failed" | "none" | Unrecognized<string>
+"pending" | "none" | Unrecognized<string>
 ```

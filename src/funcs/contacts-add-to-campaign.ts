@@ -5,12 +5,12 @@
 import * as z from "zod/v4-mini";
 import { BereachCore } from "../core.js";
 import { encodeJSON, encodeSimple } from "../lib/encodings.js";
+import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import { RequestOptions } from "../lib/sdks.js";
+import { encodePath, RequestOptions } from "../lib/sdks.js";
 import { extractSecurity, resolveGlobalSecurity } from "../lib/security.js";
-import { pathToFunc } from "../lib/url.js";
 import { BereachError } from "../models/errors/bereach-error.js";
 import {
   ConnectionError,
@@ -30,15 +30,15 @@ import { Result } from "../types/fp.js";
  * Add contacts to a campaign
  *
  * @remarks
- * Add contacts to a campaign (up to 500). Deduplicates by LinkedIn URL. 0 credits.
+ * Add contacts to a campaign (up to 500). Deduplicates by LinkedIn URL.
  */
 export function contactsAddToCampaign(
   client: BereachCore,
-  request: operations.AddCampaignContactsRequest,
+  request: operations.ContactsAddRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    operations.AddCampaignContactsResponse,
+    operations.ContactsAddResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -47,7 +47,7 @@ export function contactsAddToCampaign(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -69,12 +69,12 @@ export function contactsAddToCampaign(
 
 async function $do(
   client: BereachCore,
-  request: operations.AddCampaignContactsRequest,
+  request: operations.ContactsAddRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      operations.AddCampaignContactsResponse,
+      operations.ContactsAddResponse,
       | errors.BadRequestError
       | errors.UnauthorizedError
       | errors.ForbiddenError
@@ -83,7 +83,7 @@ async function $do(
       | errors.GoneError
       | errors.UnprocessableEntityError
       | errors.TooManyRequestsError
-      | errors.InternalServerError
+      | errors.CollectEngagersInternalServerError
       | errors.BadGatewayError
       | errors.ServiceUnavailableError
       | BereachError
@@ -100,8 +100,7 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) =>
-      z.parse(operations.AddCampaignContactsRequest$outboundSchema, value),
+    (value) => z.parse(operations.ContactsAddRequest$outboundSchema, value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -116,9 +115,14 @@ async function $do(
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/contacts/campaigns/{campaignId}/contacts")(
+  const pathResult = encodePath(
+    "/contacts/campaigns/{campaignId}/contacts",
     pathParams,
   );
+  if (!pathResult.ok) {
+    return [pathResult, { status: "invalid" }];
+  }
+  const path = pathResult.value;
 
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
@@ -132,7 +136,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "addCampaignContacts",
+    operationID: "contactsAdd",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -161,21 +165,8 @@ async function $do(
 
   const doResult = await client._do(req, {
     context,
-    errorCodes: [
-      "400",
-      "401",
-      "403",
-      "404",
-      "409",
-      "410",
-      "422",
-      "429",
-      "4XX",
-      "500",
-      "502",
-      "503",
-      "5XX",
-    ],
+    isErrorStatusCode: (statusCode: number) =>
+      matchStatusCode({ status: statusCode } as Response, ["4XX", "5XX"]),
     retryConfig: context.retryConfig,
     retryCodes: context.retryCodes,
   });
@@ -189,7 +180,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    operations.AddCampaignContactsResponse,
+    operations.ContactsAddResponse,
     | errors.BadRequestError
     | errors.UnauthorizedError
     | errors.ForbiddenError
@@ -198,7 +189,7 @@ async function $do(
     | errors.GoneError
     | errors.UnprocessableEntityError
     | errors.TooManyRequestsError
-    | errors.InternalServerError
+    | errors.CollectEngagersInternalServerError
     | errors.BadGatewayError
     | errors.ServiceUnavailableError
     | BereachError
@@ -210,7 +201,7 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(201, operations.AddCampaignContactsResponse$inboundSchema),
+    M.json(201, operations.ContactsAddResponse$inboundSchema),
     M.jsonErr(400, errors.BadRequestError$inboundSchema),
     M.jsonErr(401, errors.UnauthorizedError$inboundSchema),
     M.jsonErr(403, errors.ForbiddenError$inboundSchema),
@@ -219,7 +210,7 @@ async function $do(
     M.jsonErr(410, errors.GoneError$inboundSchema),
     M.jsonErr(422, errors.UnprocessableEntityError$inboundSchema),
     M.jsonErr(429, errors.TooManyRequestsError$inboundSchema),
-    M.jsonErr(500, errors.InternalServerError$inboundSchema),
+    M.jsonErr(500, errors.CollectEngagersInternalServerError$inboundSchema),
     M.jsonErr(502, errors.BadGatewayError$inboundSchema),
     M.jsonErr(503, errors.ServiceUnavailableError$inboundSchema),
     M.fail("4XX"),

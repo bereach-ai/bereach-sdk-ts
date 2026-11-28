@@ -2,182 +2,16 @@
 
 ## Overview
 
-Endpoints for listing, cancelling, and monitoring async campaign tasks and workflow chains
+Endpoints for reading the agent session snapshot
 
 ### Available Operations
 
-* [listTasks](#listtasks) - List tasks
-* [cancelTask](#canceltask) - Cancel a task
 * [eventsFeed](#eventsfeed) - Poll for events
-* [cancelChain](#cancelchain) - Cancel a workflow chain
-
-## listTasks
-
-List tasks for the authenticated user with optional filters. 0 credits.
-
-### Example Usage
-
-<!-- UsageSnippet language="typescript" operationID="listTasks" method="get" path="/tasks/list" -->
-```typescript
-import { Bereach } from "bereach";
-
-const bereach = new Bereach({
-  token: "BEREACH_API_KEY",
-});
-
-async function run() {
-  const result = await bereach.tasks.listTasks({});
-
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { BereachCore } from "bereach/core.js";
-import { tasksListTasks } from "bereach/funcs/tasks-list-tasks.js";
-
-// Use `BereachCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const bereach = new BereachCore({
-  token: "BEREACH_API_KEY",
-});
-
-async function run() {
-  const res = await tasksListTasks(bereach, {});
-  if (res.ok) {
-    const { value: result } = res;
-    console.log(result);
-  } else {
-    console.log("tasksListTasks failed:", res.error);
-  }
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ListTasksRequest](../../models/operations/list-tasks-request.md)                                                                                                   | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.ListTasksResponse](../../models/operations/list-tasks-response.md)\>**
-
-### Errors
-
-| Error Type                      | Status Code                     | Content Type                    |
-| ------------------------------- | ------------------------------- | ------------------------------- |
-| errors.BadRequestError          | 400                             | application/json                |
-| errors.UnauthorizedError        | 401                             | application/json                |
-| errors.ForbiddenError           | 403                             | application/json                |
-| errors.NotFoundError            | 404                             | application/json                |
-| errors.ConflictError            | 409                             | application/json                |
-| errors.GoneError                | 410                             | application/json                |
-| errors.UnprocessableEntityError | 422                             | application/json                |
-| errors.TooManyRequestsError     | 429                             | application/json                |
-| errors.InternalServerError      | 500                             | application/json                |
-| errors.BadGatewayError          | 502                             | application/json                |
-| errors.ServiceUnavailableError  | 503                             | application/json                |
-| errors.BereachDefaultError      | 4XX, 5XX                        | \*/\*                           |
-
-## cancelTask
-
-Cancel a queued or running task. If already terminal, returns current status. 0 credits.
-
-### Example Usage
-
-<!-- UsageSnippet language="typescript" operationID="cancelTask" method="post" path="/tasks/{id}/cancel" -->
-```typescript
-import { Bereach } from "bereach";
-
-const bereach = new Bereach({
-  token: "BEREACH_API_KEY",
-});
-
-async function run() {
-  const result = await bereach.tasks.cancelTask({
-    id: "<id>",
-  });
-
-  console.log(result);
-}
-
-run();
-```
-
-### Standalone function
-
-The standalone function version of this method:
-
-```typescript
-import { BereachCore } from "bereach/core.js";
-import { tasksCancelTask } from "bereach/funcs/tasks-cancel-task.js";
-
-// Use `BereachCore` for best tree-shaking performance.
-// You can create one instance of it to use across an application.
-const bereach = new BereachCore({
-  token: "BEREACH_API_KEY",
-});
-
-async function run() {
-  const res = await tasksCancelTask(bereach, {
-    id: "<id>",
-  });
-  if (res.ok) {
-    const { value: result } = res;
-    console.log(result);
-  } else {
-    console.log("tasksCancelTask failed:", res.error);
-  }
-}
-
-run();
-```
-
-### Parameters
-
-| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CancelTaskRequest](../../models/operations/cancel-task-request.md)                                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
-| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
-| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
-| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
-
-### Response
-
-**Promise\<[operations.CancelTaskResponse](../../models/operations/cancel-task-response.md)\>**
-
-### Errors
-
-| Error Type                      | Status Code                     | Content Type                    |
-| ------------------------------- | ------------------------------- | ------------------------------- |
-| errors.BadRequestError          | 400                             | application/json                |
-| errors.UnauthorizedError        | 401                             | application/json                |
-| errors.ForbiddenError           | 403                             | application/json                |
-| errors.NotFoundError            | 404                             | application/json                |
-| errors.ConflictError            | 409                             | application/json                |
-| errors.GoneError                | 410                             | application/json                |
-| errors.UnprocessableEntityError | 422                             | application/json                |
-| errors.TooManyRequestsError     | 429                             | application/json                |
-| errors.InternalServerError      | 500                             | application/json                |
-| errors.BadGatewayError          | 502                             | application/json                |
-| errors.ServiceUnavailableError  | 503                             | application/json                |
-| errors.BereachDefaultError      | 4XX, 5XX                        | \*/\*                           |
+* [agentSnapshot](#agentsnapshot) - Agent session snapshot
 
 ## eventsFeed
 
-Returns recent user events (task completions, replies, connections, campaign milestones). Use the cursor for pagination. Events expire after 48 hours. 0 credits.
+Returns recent alerts and activity: replies received, connections accepted, and warnings about a LinkedIn account that signed out or an AI error. Use the cursor to poll for newer ones. Events expire after 48 hours.
 
 ### Example Usage
 
@@ -240,28 +74,28 @@ run();
 
 ### Errors
 
-| Error Type                      | Status Code                     | Content Type                    |
-| ------------------------------- | ------------------------------- | ------------------------------- |
-| errors.BadRequestError          | 400                             | application/json                |
-| errors.UnauthorizedError        | 401                             | application/json                |
-| errors.ForbiddenError           | 403                             | application/json                |
-| errors.NotFoundError            | 404                             | application/json                |
-| errors.ConflictError            | 409                             | application/json                |
-| errors.GoneError                | 410                             | application/json                |
-| errors.UnprocessableEntityError | 422                             | application/json                |
-| errors.TooManyRequestsError     | 429                             | application/json                |
-| errors.InternalServerError      | 500                             | application/json                |
-| errors.BadGatewayError          | 502                             | application/json                |
-| errors.ServiceUnavailableError  | 503                             | application/json                |
-| errors.BereachDefaultError      | 4XX, 5XX                        | \*/\*                           |
+| Error Type                                | Status Code                               | Content Type                              |
+| ----------------------------------------- | ----------------------------------------- | ----------------------------------------- |
+| errors.BadRequestError                    | 400                                       | application/json                          |
+| errors.UnauthorizedError                  | 401                                       | application/json                          |
+| errors.ForbiddenError                     | 403                                       | application/json                          |
+| errors.NotFoundError                      | 404                                       | application/json                          |
+| errors.ConflictError                      | 409                                       | application/json                          |
+| errors.GoneError                          | 410                                       | application/json                          |
+| errors.UnprocessableEntityError           | 422                                       | application/json                          |
+| errors.TooManyRequestsError               | 429                                       | application/json                          |
+| errors.CollectEngagersInternalServerError | 500                                       | application/json                          |
+| errors.BadGatewayError                    | 502                                       | application/json                          |
+| errors.ServiceUnavailableError            | 503                                       | application/json                          |
+| errors.BereachDefaultError                | 4XX, 5XX                                  | \*/\*                                     |
 
-## cancelChain
+## agentSnapshot
 
-Cancel an entire workflow chain and all its in-flight tasks. 0 credits.
+Account snapshot: pipeline, every saved context, pending drafts, accounts and events in one call. Call it for any of those facts; to read one saved context use context_list by type= and scope=.
 
 ### Example Usage
 
-<!-- UsageSnippet language="typescript" operationID="cancelChain" method="post" path="/chains/{workflowRunId}/cancel" -->
+<!-- UsageSnippet language="typescript" operationID="contextGet" method="get" path="/agent/snapshot" -->
 ```typescript
 import { Bereach } from "bereach";
 
@@ -270,9 +104,7 @@ const bereach = new Bereach({
 });
 
 async function run() {
-  const result = await bereach.tasks.cancelChain({
-    workflowRunId: "<id>",
-  });
+  const result = await bereach.tasks.agentSnapshot();
 
   console.log(result);
 }
@@ -286,7 +118,7 @@ The standalone function version of this method:
 
 ```typescript
 import { BereachCore } from "bereach/core.js";
-import { tasksCancelChain } from "bereach/funcs/tasks-cancel-chain.js";
+import { tasksAgentSnapshot } from "bereach/funcs/tasks-agent-snapshot.js";
 
 // Use `BereachCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -295,14 +127,12 @@ const bereach = new BereachCore({
 });
 
 async function run() {
-  const res = await tasksCancelChain(bereach, {
-    workflowRunId: "<id>",
-  });
+  const res = await tasksAgentSnapshot(bereach);
   if (res.ok) {
     const { value: result } = res;
     console.log(result);
   } else {
-    console.log("tasksCancelChain failed:", res.error);
+    console.log("tasksAgentSnapshot failed:", res.error);
   }
 }
 
@@ -313,28 +143,38 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.CancelChainRequest](../../models/operations/cancel-chain-request.md)                                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
 
 ### Response
 
-**Promise\<[operations.CancelChainResponse](../../models/operations/cancel-chain-response.md)\>**
+**Promise\<[operations.ContextGetResponse](../../models/operations/context-get-response.md)\>**
 
 ### Errors
 
-| Error Type                      | Status Code                     | Content Type                    |
-| ------------------------------- | ------------------------------- | ------------------------------- |
-| errors.BadRequestError          | 400                             | application/json                |
-| errors.UnauthorizedError        | 401                             | application/json                |
-| errors.ForbiddenError           | 403                             | application/json                |
-| errors.NotFoundError            | 404                             | application/json                |
-| errors.ConflictError            | 409                             | application/json                |
-| errors.GoneError                | 410                             | application/json                |
-| errors.UnprocessableEntityError | 422                             | application/json                |
-| errors.TooManyRequestsError     | 429                             | application/json                |
-| errors.InternalServerError      | 500                             | application/json                |
-| errors.BadGatewayError          | 502                             | application/json                |
-| errors.ServiceUnavailableError  | 503                             | application/json                |
-| errors.BereachDefaultError      | 4XX, 5XX                        | \*/\*                           |
+| Error Type                                   | Status Code                                  | Content Type                                 |
+| -------------------------------------------- | -------------------------------------------- | -------------------------------------------- |
+| errors.ResponseBodyBadRequestError1          | 400                                          | application/json                             |
+| errors.ResponseBodyBadRequestError2          | 400                                          | application/json                             |
+| errors.ResponseBodyUnauthorizedError1        | 401                                          | application/json                             |
+| errors.ResponseBodyUnauthorizedError2        | 401                                          | application/json                             |
+| errors.ResponseBodyForbiddenError1           | 403                                          | application/json                             |
+| errors.ResponseBodyForbiddenError2           | 403                                          | application/json                             |
+| errors.ResponseBodyNotFoundError1            | 404                                          | application/json                             |
+| errors.ResponseBodyNotFoundError2            | 404                                          | application/json                             |
+| errors.ResponseBodyConflictError1            | 409                                          | application/json                             |
+| errors.ResponseBodyConflictError2            | 409                                          | application/json                             |
+| errors.ResponseBodyGoneError1                | 410                                          | application/json                             |
+| errors.ResponseBodyGoneError2                | 410                                          | application/json                             |
+| errors.ResponseBodyUnprocessableEntityError1 | 422                                          | application/json                             |
+| errors.ResponseBodyUnprocessableEntityError2 | 422                                          | application/json                             |
+| errors.ResponseBodyTooManyRequestsError1     | 429                                          | application/json                             |
+| errors.ResponseBodyTooManyRequestsError2     | 429                                          | application/json                             |
+| errors.ResponseBodyInternalServerErrorError1 | 500                                          | application/json                             |
+| errors.ResponseBodyInternalServerErrorError2 | 500                                          | application/json                             |
+| errors.ResponseBodyBadGatewayError1          | 502                                          | application/json                             |
+| errors.ResponseBodyBadGatewayError2          | 502                                          | application/json                             |
+| errors.ResponseBodyServiceUnavailableError1  | 503                                          | application/json                             |
+| errors.ResponseBodyServiceUnavailableError2  | 503                                          | application/json                             |
+| errors.BereachDefaultError                   | 4XX, 5XX                                     | \*/\*                                        |

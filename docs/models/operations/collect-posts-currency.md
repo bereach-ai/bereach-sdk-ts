@@ -1,0 +1,17 @@
+# CollectPostsCurrency
+
+## Example Usage
+
+```typescript
+import { CollectPostsCurrency } from "bereach/models/operations";
+
+let value: CollectPostsCurrency = "EUR";
+
+// Open enum: unrecognized values are captured as Unrecognized<string>
+```
+
+## Values
+
+```typescript
+"EUR" | "USD" | Unrecognized<string>
+```

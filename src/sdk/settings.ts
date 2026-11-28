@@ -13,7 +13,7 @@ export class Settings extends ClientSDK {
    * Get DM polling settings
    *
    * @remarks
-   * Get DM and connection polling settings for the active LinkedIn account. 0 credits.
+   * Get DM and connection polling settings for the active LinkedIn account.
    */
   async getDmPollingSettings(
     options?: RequestOptions,
@@ -28,7 +28,7 @@ export class Settings extends ClientSDK {
    * Update DM polling settings
    *
    * @remarks
-   * Enable/disable DM or connection polling and set webhook URL. 0 credits.
+   * Set the webhook URL that receives connection + DM events.
    */
   async patchDmPollingSettings(
     request: operations.PatchDmPollingSettingsRequest,
