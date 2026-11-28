@@ -1,0 +1,17 @@
+# SetTimeZoneRequest
+
+## Example Usage
+
+```typescript
+import { SetTimeZoneRequest } from "bereach/models/operations";
+
+let value: SetTimeZoneRequest = {};
+```
+
+## Fields
+
+| Field                                                                                                                                                                 | Type                                                                                                                                                                  | Required                                                                                                                                                              | Description                                                                                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `timeZone`                                                                                                                                                            | *string*                                                                                                                                                              | :heavy_minus_sign:                                                                                                                                                    | The IANA zone name of the place the user works, a region and a city. Never an offset from UTC. Null returns to the automatic zone. Left out, the zone stays as it is. |
+| `invitationStartHour`                                                                                                                                                 | *number*                                                                                                                                                              | :heavy_minus_sign:                                                                                                                                                    | The whole hour, local, when connection requests start each day; they go out for five hours from it. Null returns to the usual start. Left out, it stays as it is.     |
+| `messageHours`                                                                                                                                                        | [operations.MessageHours](../../models/operations/message-hours.md)                                                                                                   | :heavy_minus_sign:                                                                                                                                                    | The user's working hours, which messages follow. Null returns to the usual hours. Left out, they stay as they are.                                                    |

@@ -7,10 +7,10 @@ const bereach = new Bereach({
 });
 
 async function run() {
-  const result = await bereach.scrapers.collectLikes({
-    postUrl:
+  const result = await bereach.engagement.collectEngagers({
+    postUrls: [
       "https://www.linkedin.com/feed/update/urn:li:activity:1234567890123456789/",
-    start: 0,
+    ],
   });
 
   console.log(result);

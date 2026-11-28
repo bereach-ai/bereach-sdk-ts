@@ -10,14 +10,11 @@ import { GetDmPollingSettingsResponse } from "bereach/models/operations";
 let value: GetDmPollingSettingsResponse = {
   success: true,
   settings: {
-    dmPollingEnabled: true,
-    dmWebhookUrl: null,
-    dmLastPolledAt: "<value>",
-    connectionPollingEnabled: true,
+    dmWebhookUrl: "https://stunning-importance.org/",
     connectionLastPolledAt: "<value>",
   },
-  creditsUsed: 910875,
-  retryAfter: 26670,
+  creditsUsed: 26670,
+  retryAfter: 743559,
 };
 ```
 
@@ -27,5 +24,6 @@ let value: GetDmPollingSettingsResponse = {
 | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
 | `success`                                                                                              | *true*                                                                                                 | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
 | `settings`                                                                                             | [operations.GetDmPollingSettingsSettings](../../models/operations/get-dm-polling-settings-settings.md) | :heavy_check_mark:                                                                                     | N/A                                                                                                    |
-| `creditsUsed`                                                                                          | *number*                                                                                               | :heavy_check_mark:                                                                                     | Credits consumed (always 0 for workspace operations).                                                  |
-| `retryAfter`                                                                                           | *number*                                                                                               | :heavy_check_mark:                                                                                     | Seconds to wait (always 0 for workspace operations).                                                   |
+| `creditsUsed`                                                                                          | *number*                                                                                               | :heavy_check_mark:                                                                                     | Credits this call spent, net of anything given back, for code. 0 when nothing was charged.             |
+| `spent`                                                                                                | [operations.GetDmPollingSettingsSpent](../../models/operations/get-dm-polling-settings-spent.md)       | :heavy_minus_sign:                                                                                     | What this call spent, in money.                                                                        |
+| `retryAfter`                                                                                           | *number*                                                                                               | :heavy_check_mark:                                                                                     | Seconds to wait before another call of the same type. 0 means no wait is needed.                       |

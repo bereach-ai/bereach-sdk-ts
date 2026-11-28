@@ -14,12 +14,12 @@ export class Context extends ClientSDK {
    * List context entries
    *
    * @remarks
-   * List user-managed context entries (user profile, ICP, tone, playbook, etc.). 0 credits.
+   * List saved context entries (user profile, what they sell, Messaging Playbook). Filter by type and scope; results are paged. Entries come back as a 200-char preview; pass fullContent=true to read one entry in full, which is how to read a specific saved context such as a playbook.
    */
   async listEntries(
-    request?: operations.ListEntriesRequest | undefined,
+    request?: operations.ContextListRequest | undefined,
     options?: RequestOptions,
-  ): Promise<operations.ListEntriesResponse> {
+  ): Promise<operations.ContextListResponse> {
     return unwrapAsync(contextListEntries(
       this,
       request,
@@ -31,12 +31,12 @@ export class Context extends ClientSDK {
    * Create or update a context entry
    *
    * @remarks
-   * Save context (ICP, tone, playbook, user profile, etc.). 0 credits.
+   * Save context (Messaging Playbook, user profile, what they sell) the moment the user says save or remember, identity facts as type "user-profile". Who they want to find is never saved here: that is the search plan. A playbook write AMENDS the saved document: send the fields that change, a field left out is kept, a field sent as null is removed. Every other type replaces the whole entry, so merge the new information into what is already saved. Renaming is not a rewrite, send the type and the saved scope with the new label and no content. To delete a saved memory, an old ICP included, send its type and scope with remove true and no content.
    */
   async set(
-    request: operations.SetRequest,
+    request: operations.ContextSetRequest,
     options?: RequestOptions,
-  ): Promise<operations.SetResponse> {
+  ): Promise<operations.ContextSetResponse> {
     return unwrapAsync(contextSet(
       this,
       request,
@@ -48,12 +48,12 @@ export class Context extends ClientSDK {
    * Delete a context entry
    *
    * @remarks
-   * Delete a context entry by type and scope. 0 credits.
+   * Delete a context entry by type and scope.
    */
   async delete(
-    request: operations.DeleteRequest,
+    request: operations.ContextDeleteRequest,
     options?: RequestOptions,
-  ): Promise<operations.DeleteResponse> {
+  ): Promise<operations.ContextDeleteResponse> {
     return unwrapAsync(contextDelete(
       this,
       request,

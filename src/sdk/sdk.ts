@@ -4,36 +4,27 @@
 
 import { ClientSDK } from "../lib/sdks.js";
 import { Actions } from "./actions.js";
-import { Campaigns } from "./campaigns.js";
 import { Chat } from "./chat.js";
-import { CompanyPages } from "./company-pages.js";
-import { Connectors } from "./connectors.js";
 import { Contacts } from "./contacts.js";
 import { Context } from "./context.js";
-import { Cron } from "./cron.js";
+import { Engagement } from "./engagement.js";
 import { Profile } from "./profile.js";
-import { SalesNav } from "./sales-nav.js";
+import { Public } from "./public.js";
 import { ScheduledMessages } from "./scheduled-messages.js";
-import { Scrapers } from "./scrapers.js";
 import { Search } from "./search.js";
 import { Settings } from "./settings.js";
 import { Tasks } from "./tasks.js";
 import { Workspace } from "./workspace.js";
 
 export class Bereach extends ClientSDK {
-  private _scrapers?: Scrapers;
-  get scrapers(): Scrapers {
-    return (this._scrapers ??= new Scrapers(this._options));
+  private _engagement?: Engagement;
+  get engagement(): Engagement {
+    return (this._engagement ??= new Engagement(this._options));
   }
 
   private _search?: Search;
   get search(): Search {
     return (this._search ??= new Search(this._options));
-  }
-
-  private _salesNav?: SalesNav;
-  get salesNav(): SalesNav {
-    return (this._salesNav ??= new SalesNav(this._options));
   }
 
   private _actions?: Actions;
@@ -46,19 +37,14 @@ export class Bereach extends ClientSDK {
     return (this._profile ??= new Profile(this._options));
   }
 
-  private _companyPages?: CompanyPages;
-  get companyPages(): CompanyPages {
-    return (this._companyPages ??= new CompanyPages(this._options));
-  }
-
   private _chat?: Chat;
   get chat(): Chat {
     return (this._chat ??= new Chat(this._options));
   }
 
-  private _campaigns?: Campaigns;
-  get campaigns(): Campaigns {
-    return (this._campaigns ??= new Campaigns(this._options));
+  private _public?: Public;
+  get public(): Public {
+    return (this._public ??= new Public(this._options));
   }
 
   private _contacts?: Contacts;
@@ -76,19 +62,9 @@ export class Bereach extends ClientSDK {
     return (this._context ??= new Context(this._options));
   }
 
-  private _cron?: Cron;
-  get cron(): Cron {
-    return (this._cron ??= new Cron(this._options));
-  }
-
   private _tasks?: Tasks;
   get tasks(): Tasks {
     return (this._tasks ??= new Tasks(this._options));
-  }
-
-  private _connectors?: Connectors;
-  get connectors(): Connectors {
-    return (this._connectors ??= new Connectors(this._options));
   }
 
   private _settings?: Settings;
